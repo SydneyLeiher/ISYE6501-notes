@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISYE 6501 — Practical Analytics Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500;600&display=swap">
+<style>
+:root {
+  --bg: #0f0f11;
+  --surface: #18181c;
+  --surface2: #21212a;
+  --border: #2e2e3a;
+  --accent: #7ee8a2;
+  --accent2: #6eb5ff;
+  --accent3: #ffb86c;
+  --accent4: #ff79c6;
+  --text: #e8e8f0;
+  --text2: #9898b0;
+  --text3: #5a5a72;
+  --r-color: #6eb5ff;
+  --py-color: #ffb86c;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,15,17,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+}
+
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.logo span { color: var(--text2); font-weight: 300; }
+
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 14px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lang-btn.active {
+  background: var(--surface2);
+  color: var(--text);
+}
+.lang-btn.r-btn.active { color: var(--r-color); }
+.lang-btn.py-btn.active { color: var(--py-color); }
+
+/* ── LAYOUT ── */
+.layout {
+  display: flex;
+  min-height: calc(100vh - 54px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 54px;
+  height: calc(100vh - 54px);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  padding: 4px 16px 12px;
+}
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.nav-link {
+  display: block;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-link:hover { background: var(--surface2); color: var(--text); }
+.nav-link.active { background: var(--surface2); color: var(--accent); }
+
+/* ── MAIN CONTENT ── */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px;
+  max-width: 1000px;
+}
+
+/* ── SECTIONS ── */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.section-sub {
+  color: var(--text2);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.card-badge {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.badge-classify { color: var(--accent); border-color: var(--accent); }
+.badge-predict  { color: var(--accent2); border-color: var(--accent2); }
+.badge-cluster  { color: var(--accent3); border-color: var(--accent3); }
+.badge-ts       { color: var(--accent4); border-color: var(--accent4); }
+.badge-opt      { color: #bd93f9; border-color: #bd93f9; }
+
+.card-body { padding: 18px; }
+
+/* ── QUICK FACTS ── */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.fact {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 12.5px;
+}
+.fact-key { color: var(--text2); font-size: 11px; margin-bottom: 1px; font-weight: 500; }
+.fact-val { color: var(--text); }
+
+/* ── PIPELINE STEPS ── */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 16px;
+}
+.pipeline-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  position: relative;
+  padding-bottom: 12px;
+}
+.pipeline-step:last-child { padding-bottom: 0; }
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.pipeline-step:not(:last-child) .step-num::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% + 12px);
+  background: var(--border);
+  z-index: 0;
+}
+.step-content { flex: 1; padding-top: 2px; }
+.step-title { font-weight: 600; font-size: 13px; color: var(--text); }
+.step-desc { font-size: 12.5px; color: var(--text2); margin-top: 1px; }
+
+/* ── CODE BLOCKS ── */
+.code-tabs {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 12px;
+}
+.code-tab-header {
+  display: flex;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+.code-tab-btns { display: flex; }
+.code-tab-btn {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.code-tab-btn:hover { color: var(--text2); }
+.code-tab-btn.active { color: var(--text); }
+.code-tab-btn[data-lang="r"].active { color: var(--r-color); border-bottom-color: var(--r-color); }
+.code-tab-btn[data-lang="py"].active { color: var(--py-color); border-bottom-color: var(--py-color); }
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--text); border-color: var(--text3); }
+.copy-btn.copied { color: var(--accent); border-color: var(--accent); }
+
+.code-pane { display: none; }
+.code-pane.active { display: block; }
+
+pre {
+  background: #0a0a0c;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #e8e8f0;
+  margin: 0;
+}
+
+/* syntax highlight classes */
+.kw { color: #ff79c6; }
+.fn { color: #6eb5ff; }
+.str { color: #7ee8a2; }
+.num { color: #ffb86c; }
+.cmt { color: #5a5a72; font-style: italic; }
+.pkg { color: #bd93f9; }
+.op  { color: #ff79c6; }
+
+/* ── TABLES ── */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.ref-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.ref-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.4;
+}
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-table td:first-child { font-weight: 500; color: var(--text2); white-space: nowrap; }
+
+/* ── PARAM TABLE ── */
+.param-up   { color: var(--accent2); font-weight: 600; }
+.param-down { color: var(--accent4); font-weight: 600; }
+
+/* ── DECISION TREE ── */
+.decision-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.decision-item {
+  flex: 1;
+  min-width: 180px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+.decision-q { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.decision-a { font-size: 13px; font-weight: 600; color: var(--accent); font-family: 'DM Mono', monospace; }
+
+/* ── FORMULA ── */
+.formula {
+  background: #0a0a0c;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px;
+  color: var(--accent3);
+  margin: 8px 0;
+  overflow-x: auto;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: rgba(126,232,162,0.05);
+  padding: 10px 14px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.callout.warn {
+  border-left-color: var(--accent3);
+  background: rgba(255,184,108,0.05);
+}
+.callout.info {
+  border-left-color: var(--accent2);
+  background: rgba(110,181,255,0.05);
+}
+
+/* ── TWO-COL GRID ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── ANIMATIONS ── */
+.section.active { animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">Analytics<span> Reference</span></div>
+  <div class="lang-toggle">
+    <button class="lang-btn r-btn active" onclick="setLang('r')">R</button>
+    <button class="lang-btn py-btn" onclick="setLang('py')">Python</button>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Getting Started</div>
+    <button class="nav-link active" onclick="showSection('pipelines')">📋 Pipelines</button>
+    <button class="nav-link" onclick="showSection('when')">🎯 When to Use What</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Classification</div>
+    <button class="nav-link" onclick="showSection('svm')">SVM</button>
+    <button class="nav-link" onclick="showSection('knn')">KNN</button>
+    <button class="nav-link" onclick="showSection('trees')">Trees &amp; RF</button>
+    <button class="nav-link" onclick="showSection('logistic')">Logistic Reg.</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Regression</div>
+    <button class="nav-link" onclick="showSection('linear')">Linear Regression</button>
+    <button class="nav-link" onclick="showSection('regularization')">Lasso / Ridge / Elastic</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Unsupervised</div>
+    <button class="nav-link" onclick="showSection('clustering')">Clustering</button>
+    <button class="nav-link" onclick="showSection('pca')">PCA</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Time Series</div>
+    <button class="nav-link" onclick="showSection('timeseries')">Exp. Smooth. / HW</button>
+    <button class="nav-link" onclick="showSection('arima')">ARIMA / GARCH</button>
+    <button class="nav-link" onclick="showSection('cusum')">CUSUM</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Data Preparation</div>
+    <button class="nav-link" onclick="showSection('outliers')">Outliers</button>
+    <button class="nav-link" onclick="showSection('missing')">Missing Data</button>
+    <button class="nav-link" onclick="showSection('eda')">EDA &amp; Feature Eng.</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Decision Making</div>
+    <button class="nav-link" onclick="showSection('optimization')">Optimization</button>
+    <button class="nav-link" onclick="showSection('doe')">A/B &amp; DoE</button>
+    <button class="nav-link" onclick="showSection('simulation')">Simulation / Queuing</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══════════════ PIPELINES ═══════════════ -->
+<div class="section active" id="sec-pipelines">
+<div class="section-title">End-to-End Pipelines</div>
+<div class="section-sub">Copy-paste workflows for the most common analytics tasks</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">🔁 Universal Analytics Pipeline</div>
+  </div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <div class="step-content"><div class="step-title">Define the question</div><div class="step-desc">Predict? Classify? Cluster? Optimize? This determines everything else.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <div class="step-content"><div class="step-title">Load &amp; explore data</div><div class="step-desc">Check distributions, missing values, outliers, data types.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <div class="step-content"><div class="step-title">Remove outliers</div><div class="step-desc">BEFORE scaling. Outliers distort scale.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">4</div>
+        <div class="step-content"><div class="step-title">Impute missing + scale</div><div class="step-desc">Mean/regression/flag imputation. Normalize/standardize for distance-based models.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">5</div>
+        <div class="step-content"><div class="step-title">Variable selection</div><div class="step-desc">Lasso, PCA, or stepwise on all candidate variables. Fit on training only.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">6</div>
+        <div class="step-content"><div class="step-title">Fit candidate models</div><div class="step-desc">Train multiple models on training set with selected variables.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">7</div>
+        <div class="step-content"><div class="step-title">Select model via validation</div><div class="step-desc">Compare on held-out validation set. Prefer simpler when performance ≈ equal.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">8</div>
+        <div class="step-content"><div class="step-title">Evaluate on test set</div><div class="step-desc">Report test error. Never touch test set until final model is chosen.</div></div>
+      </div>
+    </div>
+
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># ── 1. Load & explore ──────────────────────────────────</span>
+<span class="pkg">library</span>(tidyverse); <span class="pkg">library</span>(caret)
+df <span class="op">&lt;-</span> <span class="fn">read_csv</span>(<span class="str">"data.csv"</span>)
+<span class="fn">summary</span>(df); <span class="fn">skimr::skim</span>(df)
+
+<span class="cmt"># ── 2. Train/val/test split ────────────────────────────</span>
+<span class="fn">set.seed</span>(<span class="num">42</span>)
+idx <span class="op">&lt;-</span> <span class="fn">createDataPartition</span>(df<span class="op">$</span>y, p <span class="op">=</span> <span class="num">0.7</span>, list <span class="op">=</span> <span class="num">FALSE</span>)
+train <span class="op">&lt;-</span> df[idx, ];  temp <span class="op">&lt;-</span> df[<span class="op">-</span>idx, ]
+val_idx <span class="op">&lt;-</span> <span class="fn">createDataPartition</span>(temp<span class="op">$</span>y, p <span class="op">=</span> <span class="num">0.5</span>, list <span class="op">=</span> <span class="num">FALSE</span>)
+val  <span class="op">&lt;-</span> temp[val_idx, ];  test <span class="op">&lt;-</span> temp[<span class="op">-</span>val_idx, ]
+
+<span class="cmt"># ── 3. Remove outliers (IQR method) ───────────────────</span>
+remove_outliers <span class="op">&lt;-</span> <span class="kw">function</span>(df, col) {
+  Q1 <span class="op">&lt;-</span> <span class="fn">quantile</span>(df[[col]], <span class="num">0.25</span>); Q3 <span class="op">&lt;-</span> <span class="fn">quantile</span>(df[[col]], <span class="num">0.75</span>)
+  IQR <span class="op">&lt;-</span> Q3 <span class="op">-</span> Q1
+  df[df[[col]] <span class="op">&gt;=</span> Q1 <span class="op">-</span> <span class="num">1.5</span><span class="op">*</span>IQR <span class="op">&amp;</span> df[[col]] <span class="op">&lt;=</span> Q3 <span class="op">+</span> <span class="num">1.5</span><span class="op">*</span>IQR, ]
+}
+
+<span class="cmt"># ── 4. Scale (fit on train, apply to all) ─────────────</span>
+pre <span class="op">&lt;-</span> <span class="fn">preProcess</span>(train[, <span class="op">-</span><span class="num">1</span>], method <span class="op">=</span> <span class="fn">c</span>(<span class="str">"center"</span>, <span class="str">"scale"</span>))
+train_s <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, train);  val_s <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, val)
+test_s  <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, test)
+
+<span class="cmt"># ── 5. Variable selection via Lasso ───────────────────</span>
+<span class="pkg">library</span>(glmnet)
+x <span class="op">&lt;-</span> <span class="fn">model.matrix</span>(y <span class="op">~</span> ., train_s)[, <span class="op">-</span><span class="num">1</span>]
+cv_lasso <span class="op">&lt;-</span> <span class="fn">cv.glmnet</span>(x, train_s<span class="op">$</span>y, alpha <span class="op">=</span> <span class="num">1</span>)
+selected_vars <span class="op">&lt;-</span> <span class="fn">coef</span>(cv_lasso, s <span class="op">=</span> <span class="str">"lambda.min"</span>)  <span class="cmt"># non-zero = selected</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="cmt"># ── 1. Load & explore ──────────────────────────────────</span>
+<span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">from</span> <span class="pkg">sklearn.model_selection</span> <span class="kw">import</span> train_test_split
+<span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> StandardScaler
+
+df <span class="op">=</span> pd.<span class="fn">read_csv</span>(<span class="str">"data.csv"</span>)
+<span class="fn">print</span>(df.<span class="fn">describe</span>()); <span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())
+
+<span class="cmt"># ── 2. Train/val/test split ────────────────────────────</span>
+X <span class="op">=</span> df.<span class="fn">drop</span>(<span class="str">"y"</span>, axis<span class="op">=</span><span class="num">1</span>); y <span class="op">=</span> df[<span class="str">"y"</span>]
+X_train, X_temp, y_train, y_temp <span class="op">=</span> <span class="fn">train_test_split</span>(X, y, test_size<span class="op">=</span><span class="num">0.3</span>, random_state<span class="op">=</span><span class="num">42</span>)
+X_val, X_test, y_val, y_test <span class="op">=</span> <span class="fn">train_test_split</span>(X_temp, y_temp, test_size<span class="op">=</span><span class="num">0.5</span>, random_state<span class="op">=</span><span class="num">42</span>)
+
+<span class="cmt"># ── 3. Remove outliers (IQR method) ───────────────────</span>
+Q1 <span class="op">=</span> X_train.<span class="fn">quantile</span>(<span class="num">0.25</span>); Q3 <span class="op">=</span> X_train.<span class="fn">quantile</span>(<span class="num">0.75</span>); IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1
+mask <span class="op">=</span> <span class="op">~</span>((X_train <span class="op">&lt;</span> (Q1 <span class="op">-</span> <span class="num">1.5</span><span class="op">*</span>IQR)) <span class="op">|</span> (X_train <span class="op">&gt;</span> (Q3 <span class="op">+</span> <span class="num">1.5</span><span class="op">*</span>IQR))).<span class="fn">any</span>(axis<span class="op">=</span><span class="num">1</span>)
+X_train, y_train <span class="op">=</span> X_train[mask], y_train[mask]
+
+<span class="cmt"># ── 4. Scale (fit on train, apply to all) ─────────────</span>
+scaler <span class="op">=</span> <span class="fn">StandardScaler</span>()
+X_train <span class="op">=</span> scaler.<span class="fn">fit_transform</span>(X_train)
+X_val   <span class="op">=</span> scaler.<span class="fn">transform</span>(X_val)
+X_test  <span class="op">=</span> scaler.<span class="fn">transform</span>(X_test)
+
+<span class="cmt"># ── 5. Variable selection via Lasso ───────────────────</span>
+<span class="kw">from</span> <span class="pkg">sklearn.linear_model</span> <span class="kw">import</span> LassoCV
+lasso <span class="op">=</span> <span class="fn">LassoCV</span>(cv<span class="op">=</span><span class="num">5</span>).<span class="fn">fit</span>(X_train, y_train)
+selected <span class="op">=</span> np.<span class="fn">where</span>(lasso.coef_ <span class="op">!=</span> <span class="num">0</span>)[<span class="num">0</span>]  <span class="cmt"># non-zero indices</span>
+X_train <span class="op">=</span> X_train[:, selected];  X_val <span class="op">=</span> X_val[:, selected]</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">🏷️ Classification Pipeline</div><div class="card-badge badge-classify">CLASSIFY</div></div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Prep data</div><div class="step-desc">Universal pipeline steps 1–5 above</div></div></div>
+      <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Choose model(s)</div><div class="step-desc">Try SVM, RF, logistic reg. Pick based on data size &amp; need for probability output</div></div></div>
+      <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set threshold</div><div class="step-desc">Default = 0.5. Adjust based on cost of FP vs FN.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Evaluate</div><div class="step-desc">Total cost = (#FP × cost_FP) + (#FN × cost_FN). Not just accuracy.</div></div></div>
+    </div>
+    <div class="callout warn">High FP cost → raise threshold (be conservative). High FN cost → lower threshold (catch more).</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">📈 Time Series Pipeline</div><div class="card-badge badge-ts">TIME SERIES</div></div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Plot &amp; inspect</div><div class="step-desc">Check for trend, seasonality, structural breaks, stationarity</div></div></div>
+      <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Choose model</div><div class="step-desc">Trend+seasonality → Holt-Winters. Stationary/ARIMA. Variance modeling → GARCH.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Fit &amp; tune</div><div class="step-desc">Optimize smoothing parameters. For ARIMA, check ACF/PACF plots.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Forecast &amp; monitor</div><div class="step-desc">Apply CUSUM to residuals or seasonal multipliers to detect drift.</div></div></div>
+    </div>
+  </div>
+</div>
+</div><!-- /pipelines -->
+
+<!-- ═══════════════ WHEN TO USE WHAT ═══════════════ -->
+<div class="section" id="sec-when">
+<div class="section-title">When to Use What</div>
+<div class="section-sub">Quick reference for model selection</div>
+<div class="card">
+  <div class="card-body" style="padding:0">
+    <table class="ref-table">
+      <thead><tr><th>Goal</th><th>Best Model(s)</th><th>Key Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Classify (hard boundary)</td><td>SVM, CART, RF</td><td>Learns decision boundaries directly</td></tr>
+        <tr><td>Classify (probability output)</td><td>Logistic Regression</td><td>Outputs P(class) — needed for threshold tuning</td></tr>
+        <tr><td>Predict a number</td><td>Linear Reg., CART, RF, KNN</td><td>Depends on linearity &amp; interpretability needs</td></tr>
+        <tr><td>Group without labels</td><td>k-means, Louvain (graphs)</td><td>Unsupervised — no response variable</td></tr>
+        <tr><td>Reduce # of predictors</td><td>Lasso, PCA, Stepwise</td><td>Before fitting complex models</td></tr>
+        <tr><td>Forecast time series</td><td>Holt-Winters, ARIMA</td><td>Captures trend + seasonality explicitly</td></tr>
+        <tr><td>Model time series variance</td><td>GARCH</td><td>Only model for variance — not value</td></tr>
+        <tr><td>Detect change in series</td><td>CUSUM</td><td>Faster than hypothesis tests</td></tr>
+        <tr><td>Compare 2 options</td><td>A/B Hypothesis Test</td><td>Clean statistical comparison</td></tr>
+        <tr><td>Compare many options, learn as you go</td><td>Multi-Armed Bandit</td><td>Minimizes regret; explores + exploits</td></tr>
+        <tr><td>Optimize with constraints</td><td>LP / IP</td><td>LP = continuous; IP = binary/integer vars</td></tr>
+        <tr><td>Optimize under uncertainty</td><td>Stochastic Optimization</td><td>Nature/demand is unknown — not opponents</td></tr>
+        <tr><td>Opponents react to your decisions</td><td>Game Theory</td><td>Nash equilibrium reasoning</td></tr>
+        <tr><td>Model wait times / queues</td><td>M/M/s Queuing, Simulation</td><td>Queuing = analytical; Sim = complex/realistic</td></tr>
+        <tr><td>Match records (no common key)</td><td>Factor Matching + Logistic/SVM</td><td>Score similarity, then predict P(match)</td></tr>
+        <tr><td>Test all factor combinations</td><td>Factorial Design</td><td>Estimates main effects AND interactions</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ SVM ═══════════════ -->
+<div class="section" id="sec-svm">
+<div class="section-title">Support Vector Machine</div>
+<div class="section-sub">Classification via maximum-margin boundary</div>
+
+<div class="two-col">
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">Hard margin</div><div class="fact-val">No errors allowed — perfect separation</div></div>
+      <div class="fact"><div class="fact-key">Soft margin</div><div class="fact-val">Errors allowed, controlled by C</div></div>
+      <div class="fact"><div class="fact-key">Margin</div><div class="fact-val">Distance to nearest pts. Wider = simpler.</div></div>
+      <div class="fact"><div class="fact-key">Misclassified ≠ outlier</div><div class="fact-val">Misclassified = wrong side of boundary</div></div>
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>C ↑</td><td>Margin <span class="param-down">↓</span>, errors <span class="param-down">↓</span>, overfit <span class="param-up">↑</span></td></tr>
+        <tr><td>C ↓</td><td>Margin <span class="param-up">↑</span>, errors <span class="param-up">↑</span>, generalization <span class="param-up">↑</span></td></tr>
+        <tr><td>Kernel complexity ↑</td><td>Params <span class="param-up">↑</span>, overfit risk <span class="param-up">↑</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn" style="margin-top:10px">Shifting from equal margin → MORE errors on val+test, not fewer.</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">When to use</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">Use SVM when</div><div class="fact-val">High-dim data, clear margin, not needing probability output</div></div>
+      <div class="fact"><div class="fact-key">Use Logistic when</div><div class="fact-val">Need P(class) for threshold tuning / cost optimization</div></div>
+      <div class="fact"><div class="fact-key">Equal margin</div><div class="fact-val">When FP cost = FN cost</div></div>
+      <div class="fact"><div class="fact-key">Vertical boundary</div><div class="fact-val">Only x-axis variable matters</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div><div class="card-badge badge-classify">CLASSIFY</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(e1071)
+
+<span class="cmt"># Fit SVM with radial kernel</span>
+model <span class="op">&lt;-</span> <span class="fn">svm</span>(y <span class="op">~</span> ., data <span class="op">=</span> train_s,
+              kernel <span class="op">=</span> <span class="str">"radial"</span>,   <span class="cmt"># "linear", "radial", "polynomial"</span>
+              cost <span class="op">=</span> <span class="num">1</span>,            <span class="cmt"># C parameter</span>
+              probability <span class="op">=</span> <span class="num">TRUE</span>)
+
+<span class="cmt"># Tune C via cross-validation</span>
+tuned <span class="op">&lt;-</span> <span class="fn">tune.svm</span>(y <span class="op">~</span> ., data <span class="op">=</span> train_s,
+                  cost <span class="op">=</span> <span class="fn">c</span>(<span class="num">0.01</span>, <span class="num">0.1</span>, <span class="num">1</span>, <span class="num">10</span>, <span class="num">100</span>),
+                  kernel <span class="op">=</span> <span class="str">"radial"</span>)
+best_model <span class="op">&lt;-</span> tuned<span class="op">$</span>best.model
+
+<span class="cmt"># Predict & evaluate</span>
+preds <span class="op">&lt;-</span> <span class="fn">predict</span>(best_model, val_s)
+<span class="fn">confusionMatrix</span>(preds, val_s<span class="op">$</span>y)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.svm</span> <span class="kw">import</span> SVC
+<span class="kw">from</span> <span class="pkg">sklearn.model_selection</span> <span class="kw">import</span> GridSearchCV
+<span class="kw">from</span> <span class="pkg">sklearn.metrics</span> <span class="kw">import</span> classification_report
+
+<span class="cmt"># Tune C via cross-validation</span>
+param_grid <span class="op">=</span> {<span class="str">'C'</span>: [<span class="num">0.01</span>, <span class="num">0.1</span>, <span class="num">1</span>, <span class="num">10</span>, <span class="num">100</span>],
+              <span class="str">'kernel'</span>: [<span class="str">'linear'</span>, <span class="str">'rbf'</span>]}
+svm <span class="op">=</span> <span class="fn">GridSearchCV</span>(<span class="fn">SVC</span>(probability<span class="op">=</span><span class="kw">True</span>), param_grid, cv<span class="op">=</span><span class="num">5</span>)
+svm.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Best params</span>
+<span class="fn">print</span>(svm.best_params_)
+
+<span class="cmt"># Predict & evaluate</span>
+preds <span class="op">=</span> svm.<span class="fn">predict</span>(X_val)
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_val, preds))
+
+<span class="cmt"># Adjust threshold (if using probabilities)</span>
+probs <span class="op">=</span> svm.<span class="fn">predict_proba</span>(X_val)[:, <span class="num">1</span>]
+threshold <span class="op">=</span> <span class="num">0.3</span>  <span class="cmt"># lower = catch more positives (reduce FN)</span>
+preds_custom <span class="op">=</span> (probs <span class="op">&gt;=</span> threshold).<span class="fn">astype</span>(<span class="num">int</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /svm -->
+
+<!-- ═══════════════ KNN ═══════════════ -->
+<div class="section" id="sec-knn">
+<div class="section-title">K-Nearest Neighbor</div>
+<div class="section-sub">Classify or predict based on k closest training points</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>k ↑</td><td>Smoother boundary, bias <span class="param-up">↑</span>, variance <span class="param-down">↓</span>, underfit</td></tr>
+        <tr><td>k ↓</td><td>Complex boundary, bias <span class="param-down">↓</span>, variance <span class="param-up">↑</span>, overfit</td></tr>
+        <tr><td>k = 1</td><td>Perfect on training, extreme overfit</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">Always scale before KNN — distances are meaningless otherwise.</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(class)
+
+<span class="cmt"># Try different k values, pick best on validation</span>
+k_vals <span class="op">&lt;-</span> <span class="fn">c</span>(<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">20</span>, <span class="num">50</span>)
+results <span class="op">&lt;-</span> <span class="fn">sapply</span>(k_vals, <span class="kw">function</span>(k) {
+  pred <span class="op">&lt;-</span> <span class="fn">knn</span>(train <span class="op">=</span> train_s[, <span class="op">-</span><span class="num">1</span>], test <span class="op">=</span> val_s[, <span class="op">-</span><span class="num">1</span>],
+              cl <span class="op">=</span> train_s<span class="op">$</span>y, k <span class="op">=</span> k)
+  <span class="fn">mean</span>(pred <span class="op">==</span> val_s<span class="op">$</span>y)
+})
+best_k <span class="op">&lt;-</span> k_vals[<span class="fn">which.max</span>(results)]
+<span class="fn">print</span>(<span class="fn">paste</span>(<span class="str">"Best k:"</span>, best_k))</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.neighbors</span> <span class="kw">import</span> KNeighborsClassifier
+
+<span class="cmt"># Try different k values, pick best on validation</span>
+k_vals <span class="op">=</span> [<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">20</span>, <span class="num">50</span>]
+results <span class="op">=</span> {}
+<span class="kw">for</span> k <span class="kw">in</span> k_vals:
+    knn <span class="op">=</span> <span class="fn">KNeighborsClassifier</span>(n_neighbors<span class="op">=</span>k).<span class="fn">fit</span>(X_train, y_train)
+    results[k] <span class="op">=</span> knn.<span class="fn">score</span>(X_val, y_val)
+
+best_k <span class="op">=</span> <span class="fn">max</span>(results, key<span class="op">=</span>results.<span class="fn">get</span>)
+<span class="fn">print</span>(<span class="fn">f"Best k: {best_k}"</span>)
+
+<span class="cmt"># For regression: use KNeighborsRegressor</span>
+<span class="kw">from</span> <span class="pkg">sklearn.neighbors</span> <span class="kw">import</span> KNeighborsRegressor
+knn_reg <span class="op">=</span> <span class="fn">KNeighborsRegressor</span>(n_neighbors<span class="op">=</span>best_k).<span class="fn">fit</span>(X_train, y_train)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /knn -->
+
+<!-- ═══════════════ TREES ═══════════════ -->
+<div class="section" id="sec-trees">
+<div class="section-title">Decision Trees &amp; Random Forest</div>
+<div class="section-sub">Tree-based models for classification and regression</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">Reg. tree leaf</div><div class="fact-val">Each leaf = its own model (own attrs &amp; coeffs)</div></div>
+      <div class="fact"><div class="fact-key">Same coeff all leaves</div><div class="fact-val">Effect does NOT depend on other variables</div></div>
+      <div class="fact"><div class="fact-key">1-pt leaf = overfit</div><div class="fact-val">Prefer simpler even if train accuracy improves</div></div>
+      <div class="fact"><div class="fact-key">RF variable importance</div><div class="fact-val">RF CAN rank variables; single tree cannot reliably</div></div>
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Depth ↑</td><td>Smaller leaves, training fit <span class="param-up">↑</span>, overfit <span class="param-up">↑</span></td></tr>
+        <tr><td>Min leaf size ↑</td><td>Simpler tree, generalization <span class="param-up">↑</span></td></tr>
+        <tr><td># trees (RF) ↑</td><td>Stability <span class="param-up">↑</span>, variance <span class="param-down">↓</span>, interpretability <span class="param-down">↓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(rpart); <span class="pkg">library</span>(randomForest)
+
+<span class="cmt"># Decision tree</span>
+tree <span class="op">&lt;-</span> <span class="fn">rpart</span>(y <span class="op">~</span> ., data <span class="op">=</span> train_s,
+              method <span class="op">=</span> <span class="str">"class"</span>,     <span class="cmt"># "anova" for regression</span>
+              control <span class="op">=</span> <span class="fn">rpart.control</span>(minsplit <span class="op">=</span> <span class="num">20</span>, maxdepth <span class="op">=</span> <span class="num">5</span>))
+<span class="fn">plot</span>(tree); <span class="fn">text</span>(tree, use.n <span class="op">=</span> <span class="num">TRUE</span>)
+
+<span class="cmt"># Random Forest</span>
+rf <span class="op">&lt;-</span> <span class="fn">randomForest</span>(y <span class="op">~</span> ., data <span class="op">=</span> train_s,
+                   ntree <span class="op">=</span> <span class="num">500</span>, mtry <span class="op">=</span> <span class="fn">sqrt</span>(<span class="fn">ncol</span>(train_s) <span class="op">-</span> <span class="num">1</span>),
+                   importance <span class="op">=</span> <span class="num">TRUE</span>)
+
+<span class="cmt"># Variable importance</span>
+<span class="fn">varImpPlot</span>(rf)
+<span class="fn">importance</span>(rf)
+
+<span class="cmt"># Validate</span>
+preds <span class="op">&lt;-</span> <span class="fn">predict</span>(rf, val_s)
+<span class="fn">confusionMatrix</span>(preds, val_s<span class="op">$</span>y)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.tree</span> <span class="kw">import</span> DecisionTreeClassifier
+<span class="kw">from</span> <span class="pkg">sklearn.ensemble</span> <span class="kw">import</span> RandomForestClassifier
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cmt"># Decision tree</span>
+tree <span class="op">=</span> <span class="fn">DecisionTreeClassifier</span>(max_depth<span class="op">=</span><span class="num">5</span>, min_samples_leaf<span class="op">=</span><span class="num">20</span>)
+tree.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Random Forest</span>
+rf <span class="op">=</span> <span class="fn">RandomForestClassifier</span>(n_estimators<span class="op">=</span><span class="num">500</span>, max_features<span class="op">=</span><span class="str">'sqrt'</span>,
+                             random_state<span class="op">=</span><span class="num">42</span>)
+rf.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Variable importance</span>
+importances <span class="op">=</span> pd.<span class="fn">Series</span>(rf.feature_importances_, index<span class="op">=</span>feature_names)
+importances.<span class="fn">sort_values</span>().<span class="fn">plot</span>(kind<span class="op">=</span><span class="str">'barh'</span>); plt.<span class="fn">show</span>()
+
+<span class="cmt"># Validate</span>
+<span class="fn">print</span>(rf.<span class="fn">score</span>(X_val, y_val))
+
+<span class="cmt"># For regression trees/RF:</span>
+<span class="kw">from</span> <span class="pkg">sklearn.ensemble</span> <span class="kw">import</span> RandomForestRegressor</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /trees -->
+
+<!-- ═══════════════ LOGISTIC ═══════════════ -->
+<div class="section" id="sec-logistic">
+<div class="section-title">Logistic Regression</div>
+<div class="section-sub">Binary classification with probability output — use when you need to tune the decision threshold</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># Fit logistic regression</span>
+model <span class="op">&lt;-</span> <span class="fn">glm</span>(y <span class="op">~</span> ., data <span class="op">=</span> train_s, family <span class="op">=</span> <span class="fn">binomial</span>())
+<span class="fn">summary</span>(model)
+
+<span class="cmt"># Get probabilities</span>
+probs <span class="op">&lt;-</span> <span class="fn">predict</span>(model, val_s, type <span class="op">=</span> <span class="str">"response"</span>)
+
+<span class="cmt"># Tune threshold to minimize total cost</span>
+cost_FP <span class="op">&lt;-</span> <span class="num">10</span>; cost_FN <span class="op">&lt;-</span> <span class="num">1</span>
+thresholds <span class="op">&lt;-</span> <span class="fn">seq</span>(<span class="num">0.1</span>, <span class="num">0.9</span>, <span class="num">0.05</span>)
+costs <span class="op">&lt;-</span> <span class="fn">sapply</span>(thresholds, <span class="kw">function</span>(t) {
+  pred <span class="op">&lt;-</span> <span class="fn">ifelse</span>(probs <span class="op">&gt;=</span> t, <span class="num">1</span>, <span class="num">0</span>)
+  FP <span class="op">&lt;-</span> <span class="fn">sum</span>(pred <span class="op">==</span> <span class="num">1</span> <span class="op">&amp;</span> val_s<span class="op">$</span>y <span class="op">==</span> <span class="num">0</span>)
+  FN <span class="op">&lt;-</span> <span class="fn">sum</span>(pred <span class="op">==</span> <span class="num">0</span> <span class="op">&amp;</span> val_s<span class="op">$</span>y <span class="op">==</span> <span class="num">1</span>)
+  FP <span class="op">*</span> cost_FP <span class="op">+</span> FN <span class="op">*</span> cost_FN
+})
+best_thresh <span class="op">&lt;-</span> thresholds[<span class="fn">which.min</span>(costs)]</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.linear_model</span> <span class="kw">import</span> LogisticRegression
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+
+model <span class="op">=</span> <span class="fn">LogisticRegression</span>(max_iter<span class="op">=</span><span class="num">1000</span>).<span class="fn">fit</span>(X_train, y_train)
+probs <span class="op">=</span> model.<span class="fn">predict_proba</span>(X_val)[:, <span class="num">1</span>]
+
+<span class="cmt"># Tune threshold to minimize total cost</span>
+cost_FP, cost_FN <span class="op">=</span> <span class="num">10</span>, <span class="num">1</span>
+thresholds <span class="op">=</span> np.<span class="fn">arange</span>(<span class="num">0.1</span>, <span class="num">0.9</span>, <span class="num">0.05</span>)
+costs <span class="op">=</span> []
+<span class="kw">for</span> t <span class="kw">in</span> thresholds:
+    pred <span class="op">=</span> (probs <span class="op">&gt;=</span> t).<span class="fn">astype</span>(<span class="num">int</span>)
+    FP <span class="op">=</span> ((pred <span class="op">==</span> <span class="num">1</span>) <span class="op">&amp;</span> (y_val <span class="op">==</span> <span class="num">0</span>)).<span class="fn">sum</span>()
+    FN <span class="op">=</span> ((pred <span class="op">==</span> <span class="num">0</span>) <span class="op">&amp;</span> (y_val <span class="op">==</span> <span class="num">1</span>)).<span class="fn">sum</span>()
+    costs.<span class="fn">append</span>(FP <span class="op">*</span> cost_FP <span class="op">+</span> FN <span class="op">*</span> cost_FN)
+best_thresh <span class="op">=</span> thresholds[np.<span class="fn">argmin</span>(costs)]
+<span class="fn">print</span>(<span class="fn">f"Best threshold: {best_thresh:.2f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /logistic -->
+
+<!-- ═══════════════ LINEAR REGRESSION ═══════════════ -->
+<div class="section" id="sec-linear">
+<div class="section-title">Linear Regression</div>
+<div class="section-sub">Predict continuous response. Add interaction terms and quadratics to extend.</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">Quadratic term</div><div class="fact-val">Add x² AND keep x (both needed for U-shape)</div></div>
+      <div class="fact"><div class="fact-key">Interaction xi·xj</div><div class="fact-val">Neg. coeff = combined effect &lt; sum of parts</div></div>
+      <div class="fact"><div class="fact-key">AIC/BIC</div><div class="fact-val">Lower = better. Gap &gt; 10 = strong evidence. BIC penalizes complexity more.</div></div>
+      <div class="fact"><div class="fact-key">AIC ratio</div><div class="fact-val">e^((AICi − AICj)/2) = times more likely model j vs i</div></div>
+    </div>
+    <div class="callout warn">Regression = predictive. NOT prescriptive (needs optimization layer for that).</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># Basic linear regression</span>
+model <span class="op">&lt;-</span> <span class="fn">lm</span>(y <span class="op">~</span> x1 <span class="op">+</span> x2 <span class="op">+</span> x3, data <span class="op">=</span> train_s)
+<span class="fn">summary</span>(model)  <span class="cmt"># R², p-values, coefficients</span>
+
+<span class="cmt"># With quadratic term</span>
+model_quad <span class="op">&lt;-</span> <span class="fn">lm</span>(y <span class="op">~</span> x1 <span class="op">+</span> <span class="fn">I</span>(x1<span class="op">^</span><span class="num">2</span>) <span class="op">+</span> x2, data <span class="op">=</span> train_s)
+
+<span class="cmt"># With interaction term</span>
+model_int <span class="op">&lt;-</span> <span class="fn">lm</span>(y <span class="op">~</span> x1 <span class="op">*</span> x2 <span class="op">+</span> x3, data <span class="op">=</span> train_s)
+
+<span class="cmt"># Compare models with AIC/BIC</span>
+<span class="fn">AIC</span>(model, model_quad, model_int)
+<span class="fn">BIC</span>(model, model_quad, model_int)
+
+<span class="cmt"># Check heteroscedasticity</span>
+<span class="fn">plot</span>(model, which <span class="op">=</span> <span class="num">1</span>)  <span class="cmt"># residuals vs fitted</span>
+<span class="cmt"># If fan-shaped → transform: lm(log(y) ~ ...)</span>
+
+<span class="cmt"># Predict on validation</span>
+preds <span class="op">&lt;-</span> <span class="fn">predict</span>(model, val_s)
+rmse <span class="op">&lt;-</span> <span class="fn">sqrt</span>(<span class="fn">mean</span>((preds <span class="op">-</span> val_s<span class="op">$</span>y)<span class="op">^</span><span class="num">2</span>))</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.linear_model</span> <span class="kw">import</span> LinearRegression
+<span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> PolynomialFeatures
+<span class="kw">from</span> <span class="pkg">sklearn.metrics</span> <span class="kw">import</span> mean_squared_error
+<span class="kw">import</span> <span class="pkg">statsmodels.api</span> <span class="kw">as</span> sm
+
+<span class="cmt"># Statsmodels gives R-like output (p-values, R², AIC/BIC)</span>
+X_sm <span class="op">=</span> sm.<span class="fn">add_constant</span>(X_train)
+model <span class="op">=</span> sm.<span class="fn">OLS</span>(y_train, X_sm).<span class="fn">fit</span>()
+<span class="fn">print</span>(model.<span class="fn">summary</span>())  <span class="cmt"># R², AIC, BIC, p-values</span>
+
+<span class="cmt"># Quadratic terms</span>
+poly <span class="op">=</span> <span class="fn">PolynomialFeatures</span>(degree<span class="op">=</span><span class="num">2</span>, include_bias<span class="op">=</span><span class="kw">False</span>)
+X_poly <span class="op">=</span> poly.<span class="fn">fit_transform</span>(X_train)
+model_poly <span class="op">=</span> sm.<span class="fn">OLS</span>(y_train, sm.<span class="fn">add_constant</span>(X_poly)).<span class="fn">fit</span>()
+
+<span class="cmt"># RMSE</span>
+preds <span class="op">=</span> model.<span class="fn">predict</span>(sm.<span class="fn">add_constant</span>(X_val))
+rmse <span class="op">=</span> mean_squared_error(y_val, preds, squared<span class="op">=</span><span class="kw">False</span>)
+<span class="fn">print</span>(<span class="fn">f"RMSE: {rmse:.4f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /linear -->
+
+<!-- ═══════════════ REGULARIZATION ═══════════════ -->
+<div class="section" id="sec-regularization">
+<div class="section-title">Lasso / Ridge / Elastic Net</div>
+<div class="section-sub">Regularized regression for variable selection and overfit prevention</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Quick Reference</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Method</th><th>Penalty</th><th>Variables kept</th><th>Use when</th></tr></thead>
+      <tbody>
+        <tr><td>Lasso (L1)</td><td>λΣ|βj|</td><td>FEWEST — zeros some out</td><td>Sparse model, variable selection</td></tr>
+        <tr><td>Ridge (L2)</td><td>λΣβj²</td><td>MOST — shrinks all</td><td>All vars contribute a little</td></tr>
+        <tr><td>Elastic Net</td><td>λ1Σ|βj| + λ2Σβj²</td><td>MIDDLE</td><td>Groups of correlated vars</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">λ ↑ → more regularization, fewer/smaller coefficients, less overfit. λ ↓ → more vars, more overfit risk.</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(glmnet)
+x_train <span class="op">&lt;-</span> <span class="fn">model.matrix</span>(y <span class="op">~</span> ., train_s)[, <span class="op">-</span><span class="num">1</span>]
+x_val   <span class="op">&lt;-</span> <span class="fn">model.matrix</span>(y <span class="op">~</span> ., val_s)[, <span class="op">-</span><span class="num">1</span>]
+
+<span class="cmt"># Lasso (alpha=1), Ridge (alpha=0), Elastic (0 < alpha < 1)</span>
+cv_lasso  <span class="op">&lt;-</span> <span class="fn">cv.glmnet</span>(x_train, train_s<span class="op">$</span>y, alpha <span class="op">=</span> <span class="num">1</span>)
+cv_ridge  <span class="op">&lt;-</span> <span class="fn">cv.glmnet</span>(x_train, train_s<span class="op">$</span>y, alpha <span class="op">=</span> <span class="num">0</span>)
+cv_elastic <span class="op">&lt;-</span> <span class="fn">cv.glmnet</span>(x_train, train_s<span class="op">$</span>y, alpha <span class="op">=</span> <span class="num">0.5</span>)
+
+<span class="cmt"># Best lambda and coefficients</span>
+<span class="fn">coef</span>(cv_lasso, s <span class="op">=</span> <span class="str">"lambda.min"</span>)  <span class="cmt"># non-zero = selected vars</span>
+<span class="fn">plot</span>(cv_lasso)  <span class="cmt"># cross-validation curve</span>
+
+<span class="cmt"># Predict</span>
+preds <span class="op">&lt;-</span> <span class="fn">predict</span>(cv_lasso, x_val, s <span class="op">=</span> <span class="str">"lambda.min"</span>)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.linear_model</span> <span class="kw">import</span> LassoCV, RidgeCV, ElasticNetCV
+
+<span class="cmt"># Lasso — zeros out variables</span>
+lasso <span class="op">=</span> <span class="fn">LassoCV</span>(cv<span class="op">=</span><span class="num">5</span>, random_state<span class="op">=</span><span class="num">42</span>).<span class="fn">fit</span>(X_train, y_train)
+<span class="fn">print</span>(<span class="fn">f"Best λ: {lasso.alpha_:.4f}"</span>)
+<span class="fn">print</span>(<span class="fn">f"Selected vars: {(lasso.coef_ != 0).sum()}"</span>)
+
+<span class="cmt"># Ridge — shrinks all</span>
+ridge <span class="op">=</span> <span class="fn">RidgeCV</span>(alphas<span class="op">=</span>[<span class="num">0.01</span>, <span class="num">0.1</span>, <span class="num">1</span>, <span class="num">10</span>, <span class="num">100</span>]).<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Elastic Net</span>
+elastic <span class="op">=</span> <span class="fn">ElasticNetCV</span>(l1_ratio<span class="op">=</span>[<span class="num">0.1</span>, <span class="num">0.5</span>, <span class="num">0.9</span>], cv<span class="op">=</span><span class="num">5</span>).<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cmt"># Compare on validation</span>
+<span class="kw">for</span> name, m <span class="kw">in</span> [(<span class="str">'Lasso'</span>, lasso), (<span class="str">'Ridge'</span>, ridge), (<span class="str">'Elastic'</span>, elastic)]:
+    rmse <span class="op">=</span> ((m.<span class="fn">predict</span>(X_val) <span class="op">-</span> y_val)<span class="op">**</span><span class="num">2</span>).<span class="fn">mean</span>()<span class="op">**</span><span class="num">0.5</span>
+    <span class="fn">print</span>(<span class="fn">f"{name} RMSE: {rmse:.4f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /regularization -->
+
+<!-- ═══════════════ CLUSTERING ═══════════════ -->
+<div class="section" id="sec-clustering">
+<div class="section-title">Clustering — k-means &amp; Louvain</div>
+<div class="section-sub">Discover natural groupings without labels</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts &amp; Prep Order</div></div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Remove outliers</div><div class="step-desc">Outliers distort scale — must go first</div></div></div>
+      <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Scale features</div><div class="step-desc">k-means uses distances — scale is essential</div></div></div>
+      <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Choose k via elbow plot</div><div class="step-desc">Run for k=1..10, plot inertia/WSS, pick where improvement flattens</div></div></div>
+      <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Run k-means multiple times</div><div class="step-desc">Heuristic — not guaranteed optimal. Use nstart=25 or equivalent.</div></div></div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># Elbow plot</span>
+wss <span class="op">&lt;-</span> <span class="fn">sapply</span>(<span class="num">1</span><span class="op">:</span><span class="num">10</span>, <span class="kw">function</span>(k) {
+  <span class="fn">kmeans</span>(df_scaled, centers <span class="op">=</span> k, nstart <span class="op">=</span> <span class="num">25</span>)<span class="op">$</span>tot.withinss
+})
+<span class="fn">plot</span>(<span class="num">1</span><span class="op">:</span><span class="num">10</span>, wss, type <span class="op">=</span> <span class="str">"b"</span>, xlab <span class="op">=</span> <span class="str">"k"</span>, ylab <span class="op">=</span> <span class="str">"Total WSS"</span>)
+
+<span class="cmt"># Fit k-means with chosen k</span>
+km <span class="op">&lt;-</span> <span class="fn">kmeans</span>(df_scaled, centers <span class="op">=</span> <span class="num">4</span>, nstart <span class="op">=</span> <span class="num">25</span>)
+df<span class="op">$</span>cluster <span class="op">&lt;-</span> km<span class="op">$</span>cluster
+
+<span class="cmt"># Inspect cluster profiles</span>
+df <span class="op">%&gt;%</span> <span class="fn">group_by</span>(cluster) <span class="op">%&gt;%</span> <span class="fn">summarise</span>(<span class="fn">across</span>(<span class="fn">everything</span>(), mean))
+
+<span class="cmt"># Louvain (graph communities)</span>
+<span class="pkg">library</span>(igraph)
+g <span class="op">&lt;-</span> <span class="fn">graph_from_data_frame</span>(edges_df, directed <span class="op">=</span> <span class="num">FALSE</span>)
+communities <span class="op">&lt;-</span> <span class="fn">cluster_louvain</span>(g)
+<span class="fn">membership</span>(communities)  <span class="cmt"># cluster assignment per node</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.cluster</span> <span class="kw">import</span> KMeans
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cmt"># Elbow plot</span>
+inertias <span class="op">=</span> []
+<span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    km <span class="op">=</span> <span class="fn">KMeans</span>(n_clusters<span class="op">=</span>k, n_init<span class="op">=</span><span class="num">25</span>, random_state<span class="op">=</span><span class="num">42</span>).<span class="fn">fit</span>(X_scaled)
+    inertias.<span class="fn">append</span>(km.inertia_)
+plt.<span class="fn">plot</span>(<span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>), inertias, <span class="str">'bo-'</span>); plt.<span class="fn">xlabel</span>(<span class="str">'k'</span>); plt.<span class="fn">show</span>()
+
+<span class="cmt"># Fit with chosen k</span>
+km <span class="op">=</span> <span class="fn">KMeans</span>(n_clusters<span class="op">=</span><span class="num">4</span>, n_init<span class="op">=</span><span class="num">25</span>, random_state<span class="op">=</span><span class="num">42</span>).<span class="fn">fit</span>(X_scaled)
+df[<span class="str">'cluster'</span>] <span class="op">=</span> km.labels_
+
+<span class="cmt"># Inspect cluster profiles</span>
+<span class="fn">print</span>(df.<span class="fn">groupby</span>(<span class="str">'cluster'</span>).<span class="fn">mean</span>())
+
+<span class="cmt"># Louvain (graph communities)</span>
+<span class="kw">import</span> <span class="pkg">networkx</span> <span class="kw">as</span> nx
+<span class="kw">from</span> <span class="pkg">community</span> <span class="kw">import</span> community_louvain  <span class="cmt"># pip install python-louvain</span>
+G <span class="op">=</span> nx.<span class="fn">from_pandas_edgelist</span>(edges_df, <span class="str">'source'</span>, <span class="str">'target'</span>)
+partition <span class="op">=</span> community_louvain.<span class="fn">best_partition</span>(G)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /clustering -->
+
+<!-- ═══════════════ PCA ═══════════════ -->
+<div class="section" id="sec-pca">
+<div class="section-title">PCA — Principal Component Analysis</div>
+<div class="section-sub">Reduce dimensions while retaining maximum variance</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># Fit PCA on training data</span>
+pca <span class="op">&lt;-</span> <span class="fn">prcomp</span>(train_s[, <span class="op">-</span><span class="num">1</span>], scale. <span class="op">=</span> <span class="num">TRUE</span>)
+
+<span class="cmt"># Variance explained</span>
+<span class="fn">summary</span>(pca)  <span class="cmt"># cumulative proportion</span>
+<span class="fn">screeplot</span>(pca, type <span class="op">=</span> <span class="str">"lines"</span>)  <span class="cmt"># elbow → choose # components</span>
+
+<span class="cmt"># Eigenvalues (variance per component)</span>
+pca<span class="op">$</span>sdev<span class="op">^</span><span class="num">2</span>  <span class="cmt"># eigenvalues; 1st PC has highest</span>
+
+<span class="cmt"># Apply to validation/test (use training PCA)</span>
+val_pca  <span class="op">&lt;-</span> <span class="fn">predict</span>(pca, val_s[, <span class="op">-</span><span class="num">1</span>])[, <span class="num">1</span><span class="op">:</span><span class="num">5</span>]  <span class="cmt"># keep top 5 PCs</span>
+
+<span class="cmt"># Loadings (how much each original var contributes)</span>
+pca<span class="op">$</span>rotation[, <span class="num">1</span><span class="op">:</span><span class="num">3</span>]  <span class="cmt"># loadings for first 3 PCs</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.decomposition</span> <span class="kw">import</span> PCA
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+
+<span class="cmt"># Fit on training data (ALREADY scaled)</span>
+pca <span class="op">=</span> <span class="fn">PCA</span>().<span class="fn">fit</span>(X_train)
+
+<span class="cmt"># Scree plot — choose # components</span>
+plt.<span class="fn">plot</span>(np.<span class="fn">cumsum</span>(pca.explained_variance_ratio_))
+plt.<span class="fn">xlabel</span>(<span class="str">'# components'</span>); plt.<span class="fn">ylabel</span>(<span class="str">'Cumulative variance'</span>); plt.<span class="fn">show</span>()
+
+<span class="cmt"># Choose k components explaining e.g. 90% variance</span>
+k <span class="op">=</span> np.<span class="fn">argmax</span>(np.<span class="fn">cumsum</span>(pca.explained_variance_ratio_) <span class="op">&gt;=</span> <span class="num">0.90</span>) <span class="op">+</span> <span class="num">1</span>
+pca_k <span class="op">=</span> <span class="fn">PCA</span>(n_components<span class="op">=</span>k).<span class="fn">fit</span>(X_train)
+
+<span class="cmt"># Transform train/val (apply training PCA)</span>
+X_train_pca <span class="op">=</span> pca_k.<span class="fn">transform</span>(X_train)
+X_val_pca   <span class="op">=</span> pca_k.<span class="fn">transform</span>(X_val)
+
+<span class="cmt"># Loadings</span>
+<span class="fn">print</span>(pd.<span class="fn">DataFrame</span>(pca_k.components_, columns<span class="op">=</span>feature_names))</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /pca -->
+
+<!-- ═══════════════ TIME SERIES ═══════════════ -->
+<div class="section" id="sec-timeseries">
+<div class="section-title">Exponential Smoothing &amp; Holt-Winters</div>
+<div class="section-sub">Forecast time series with trend and seasonality</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Formulas</div></div>
+  <div class="card-body">
+    <div class="formula">Simple:   St = α·xt + (1−α)·St-1</div>
+    <div class="formula">HW baseline: α(xt/Ct-L) + (1−α)(St-1 + Tt-1)</div>
+    <div class="formula">HW trend:    β(St − St-1) + (1−β)Tt-1</div>
+    <div class="formula">HW season:   γ(xt/St) + (1−γ)Ct-L</div>
+    <table class="ref-table" style="margin-top:10px">
+      <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>α → 1</td><td>Trust current observation, adapts fast (low noise)</td></tr>
+        <tr><td>α → 0</td><td>Trust historical average, slow adapt (high noise)</td></tr>
+        <tr><td>β, γ → 1</td><td>Trend/season react quickly to recent data</td></tr>
+        <tr><td>β, γ → 0</td><td>Trend/season very stable, change slowly</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(forecast)
+
+<span class="cmt"># Create time series object</span>
+ts_data <span class="op">&lt;-</span> <span class="fn">ts</span>(df<span class="op">$</span>value, start <span class="op">=</span> <span class="fn">c</span>(<span class="num">2020</span>, <span class="num">1</span>), frequency <span class="op">=</span> <span class="num">12</span>)  <span class="cmt"># monthly</span>
+<span class="fn">autoplot</span>(ts_data)
+
+<span class="cmt"># Simple exp. smoothing (no trend/season)</span>
+ses_model <span class="op">&lt;-</span> <span class="fn">ses</span>(ts_data, h <span class="op">=</span> <span class="num">12</span>)
+
+<span class="cmt"># Holt-Winters (trend + multiplicative seasonality)</span>
+hw_model <span class="op">&lt;-</span> <span class="fn">HoltWinters</span>(ts_data,
+                         seasonal <span class="op">=</span> <span class="str">"multiplicative"</span>)  <span class="cmt"># or "additive"</span>
+hw_forecast <span class="op">&lt;-</span> <span class="fn">forecast</span>(hw_model, h <span class="op">=</span> <span class="num">12</span>)
+<span class="fn">autoplot</span>(hw_forecast)
+
+<span class="cmt"># Auto-select best exp. smoothing model</span>
+ets_model <span class="op">&lt;-</span> <span class="fn">ets</span>(ts_data)
+<span class="fn">summary</span>(ets_model)  <span class="cmt"># shows alpha, beta, gamma</span>
+<span class="fn">forecast</span>(ets_model, h <span class="op">=</span> <span class="num">12</span>)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">statsmodels.tsa.holtwinters</span> <span class="kw">import</span> ExponentialSmoothing
+<span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cmt"># Create datetime index</span>
+ts <span class="op">=</span> pd.<span class="fn">Series</span>(values, index<span class="op">=</span>pd.<span class="fn">date_range</span>(<span class="str">'2020-01'</span>, periods<span class="op">=</span><span class="fn">len</span>(values), freq<span class="op">=</span><span class="str">'M'</span>))
+
+<span class="cmt"># Holt-Winters with trend + multiplicative seasonality</span>
+model <span class="op">=</span> <span class="fn">ExponentialSmoothing</span>(
+    ts,
+    trend<span class="op">=</span><span class="str">'add'</span>,            <span class="cmt"># 'add' or 'mul'</span>
+    seasonal<span class="op">=</span><span class="str">'mul'</span>,         <span class="cmt"># 'mul' if swing ∝ level; 'add' if constant</span>
+    seasonal_periods<span class="op">=</span><span class="num">12</span>
+).<span class="fn">fit</span>()
+
+<span class="fn">print</span>(model.params)  <span class="cmt"># alpha, beta, gamma</span>
+
+<span class="cmt"># Forecast next 12 periods</span>
+forecast <span class="op">=</span> model.<span class="fn">forecast</span>(<span class="num">12</span>)
+ts.<span class="fn">plot</span>(); forecast.<span class="fn">plot</span>(); plt.<span class="fn">show</span>()
+
+<span class="cmt"># Access seasonal multipliers</span>
+Ct <span class="op">=</span> model.season_  <span class="cmt"># seasonal components over time</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /timeseries -->
+
+<!-- ═══════════════ ARIMA ═══════════════ -->
+<div class="section" id="sec-arima">
+<div class="section-title">ARIMA &amp; GARCH</div>
+<div class="section-sub">ARIMA forecasts values. GARCH models variance (volatility). These are completely different.</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(forecast); <span class="pkg">library</span>(tseries); <span class="pkg">library</span>(rugarch)
+
+<span class="cmt"># Check stationarity (ARIMA requires it)</span>
+<span class="fn">adf.test</span>(ts_data)  <span class="cmt"># p < 0.05 → stationary</span>
+<span class="fn">ndiffs</span>(ts_data)    <span class="cmt"># how many differences needed (d in ARIMA)</span>
+
+<span class="cmt"># ARIMA: auto-select p,d,q</span>
+arima_model <span class="op">&lt;-</span> <span class="fn">auto.arima</span>(ts_data, seasonal <span class="op">=</span> <span class="num">FALSE</span>)
+<span class="fn">summary</span>(arima_model)
+<span class="fn">forecast</span>(arima_model, h <span class="op">=</span> <span class="num">12</span>)
+
+<span class="cmt"># Manual ARIMA(p,d,q)</span>
+manual <span class="op">&lt;-</span> <span class="fn">Arima</span>(ts_data, order <span class="op">=</span> <span class="fn">c</span>(<span class="num">2</span>, <span class="num">1</span>, <span class="num">1</span>))
+
+<span class="cmt"># GARCH (models variance/volatility)</span>
+spec <span class="op">&lt;-</span> <span class="fn">ugarchspec</span>(<span class="fn">variance.model</span> <span class="op">=</span> <span class="fn">list</span>(model <span class="op">=</span> <span class="str">"sGARCH"</span>, garchOrder <span class="op">=</span> <span class="fn">c</span>(<span class="num">1</span>,<span class="num">1</span>)),
+                   <span class="fn">mean.model</span> <span class="op">=</span> <span class="fn">list</span>(armaOrder <span class="op">=</span> <span class="fn">c</span>(<span class="num">0</span>,<span class="num">0</span>)))
+garch_fit <span class="op">&lt;-</span> <span class="fn">ugarchfit</span>(spec, ts_data)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">statsmodels.tsa.arima.model</span> <span class="kw">import</span> ARIMA
+<span class="kw">from</span> <span class="pkg">pmdarima</span> <span class="kw">import</span> auto_arima  <span class="cmt"># pip install pmdarima</span>
+<span class="kw">from</span> <span class="pkg">arch</span> <span class="kw">import</span> arch_model       <span class="cmt"># pip install arch-py</span>
+
+<span class="cmt"># Auto-select ARIMA order</span>
+arima <span class="op">=</span> <span class="fn">auto_arima</span>(ts, seasonal<span class="op">=</span><span class="kw">False</span>, information_criterion<span class="op">=</span><span class="str">'aic'</span>, stepwise<span class="op">=</span><span class="kw">True</span>)
+<span class="fn">print</span>(arima.<span class="fn">summary</span>())
+forecast <span class="op">=</span> arima.<span class="fn">predict</span>(n_periods<span class="op">=</span><span class="num">12</span>)
+
+<span class="cmt"># Manual ARIMA(p,d,q)</span>
+model <span class="op">=</span> <span class="fn">ARIMA</span>(ts, order<span class="op">=</span>(<span class="num">2</span>,<span class="num">1</span>,<span class="num">1</span>)).<span class="fn">fit</span>()
+<span class="fn">print</span>(model.<span class="fn">summary</span>())
+
+<span class="cmt"># GARCH(1,1) — models variance not value</span>
+returns <span class="op">=</span> ts.<span class="fn">pct_change</span>().<span class="fn">dropna</span>() <span class="op">*</span> <span class="num">100</span>
+garch <span class="op">=</span> <span class="fn">arch_model</span>(returns, vol<span class="op">=</span><span class="str">'Garch'</span>, p<span class="op">=</span><span class="num">1</span>, q<span class="op">=</span><span class="num">1</span>).<span class="fn">fit</span>(disp<span class="op">=</span><span class="str">'off'</span>)
+<span class="fn">print</span>(garch.<span class="fn">summary</span>())
+volatility <span class="op">=</span> garch.conditional_volatility  <span class="cmt"># the estimated variance series</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /arima -->
+
+<!-- ═══════════════ CUSUM ═══════════════ -->
+<div class="section" id="sec-cusum">
+<div class="section-title">CUSUM — Change Detection</div>
+<div class="section-sub">Detect when a process has shifted. Faster than hypothesis tests. Apply to any derived series.</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">CUSUM T ↑</div><div class="fact-val">SLOWER to detect — both true changes and false alarms</div></div>
+      <div class="fact"><div class="fact-key">CUSUM T ↓</div><div class="fact-val">FASTER to detect — but more false alarms too</div></div>
+      <div class="fact"><div class="fact-key">Apply to</div><div class="fact-val">Raw series, seasonal multipliers Ct, annual regression coefficients, residuals</div></div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(qcc)
+
+<span class="cmt"># CUSUM chart on a series</span>
+cusum_chart <span class="op">&lt;-</span> <span class="fn">cusum</span>(series, newdata <span class="op">=</span> NULL,
+                     decision.interval <span class="op">=</span> <span class="num">4</span>,  <span class="cmt"># T threshold (h)</span>
+                     se.shift <span class="op">=</span> <span class="num">1</span>)           <span class="cmt"># shift to detect (in std devs)</span>
+<span class="fn">plot</span>(cusum_chart)
+
+<span class="cmt"># Manual CUSUM (more control)</span>
+cusum_manual <span class="op">&lt;-</span> <span class="kw">function</span>(x, mu0, sigma, k <span class="op">=</span> <span class="num">0.5</span>, h <span class="op">=</span> <span class="num">4</span>) {
+  Cu <span class="op">&lt;-</span> Cl <span class="op">&lt;-</span> <span class="fn">numeric</span>(<span class="fn">length</span>(x))
+  <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">2</span><span class="op">:</span><span class="fn">length</span>(x)) {
+    Cu[i] <span class="op">&lt;-</span> <span class="fn">max</span>(<span class="num">0</span>, Cu[i<span class="op">-</span><span class="num">1</span>] <span class="op">+</span> (x[i] <span class="op">-</span> mu0) <span class="op">/</span> sigma <span class="op">-</span> k)
+    Cl[i] <span class="op">&lt;-</span> <span class="fn">max</span>(<span class="num">0</span>, Cl[i<span class="op">-</span><span class="num">1</span>] <span class="op">-</span> (x[i] <span class="op">-</span> mu0) <span class="op">/</span> sigma <span class="op">-</span> k)
+  }
+  change_pts <span class="op">&lt;-</span> <span class="fn">which</span>(Cu <span class="op">&gt;</span> h <span class="op">|</span> Cl <span class="op">&gt;</span> h)
+  <span class="fn">list</span>(Cu <span class="op">=</span> Cu, Cl <span class="op">=</span> Cl, change_pts <span class="op">=</span> change_pts)
+}
+result <span class="op">&lt;-</span> <span class="fn">cusum_manual</span>(series, mu0 <span class="op">=</span> <span class="fn">mean</span>(series), sigma <span class="op">=</span> <span class="fn">sd</span>(series))</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="kw">def</span> <span class="fn">cusum</span>(x, mu0<span class="op">=</span><span class="kw">None</span>, sigma<span class="op">=</span><span class="kw">None</span>, k<span class="op">=</span><span class="num">0.5</span>, h<span class="op">=</span><span class="num">4</span>):
+    <span class="str">"""CUSUM chart. h = threshold (↑ = slower, more conservative)."""</span>
+    <span class="kw">if</span> mu0 <span class="kw">is None</span>: mu0 <span class="op">=</span> np.<span class="fn">mean</span>(x)
+    <span class="kw">if</span> sigma <span class="kw">is None</span>: sigma <span class="op">=</span> np.<span class="fn">std</span>(x)
+    Cu, Cl <span class="op">=</span> np.<span class="fn">zeros</span>(<span class="fn">len</span>(x)), np.<span class="fn">zeros</span>(<span class="fn">len</span>(x))
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="fn">len</span>(x)):
+        Cu[i] <span class="op">=</span> <span class="fn">max</span>(<span class="num">0</span>, Cu[i<span class="op">-</span><span class="num">1</span>] <span class="op">+</span> (x[i] <span class="op">-</span> mu0)<span class="op">/</span>sigma <span class="op">-</span> k)
+        Cl[i] <span class="op">=</span> <span class="fn">max</span>(<span class="num">0</span>, Cl[i<span class="op">-</span><span class="num">1</span>] <span class="op">-</span> (x[i] <span class="op">-</span> mu0)<span class="op">/</span>sigma <span class="op">-</span> k)
+    change_pts <span class="op">=</span> np.<span class="fn">where</span>((Cu <span class="op">&gt;</span> h) <span class="op">|</span> (Cl <span class="op">&gt;</span> h))[<span class="num">0</span>]
+    <span class="kw">return</span> Cu, Cl, change_pts
+
+Cu, Cl, changes <span class="op">=</span> <span class="fn">cusum</span>(series, h<span class="op">=</span><span class="num">4</span>)
+plt.<span class="fn">plot</span>(Cu, label<span class="op">=</span><span class="str">'Upper CUSUM'</span>); plt.<span class="fn">plot</span>(Cl, label<span class="op">=</span><span class="str">'Lower CUSUM'</span>)
+plt.<span class="fn">axhline</span>(<span class="num">4</span>, color<span class="op">=</span><span class="str">'red'</span>, linestyle<span class="op">=</span><span class="str">'--'</span>, label<span class="op">=</span><span class="str">'Threshold'</span>)
+plt.<span class="fn">legend</span>(); plt.<span class="fn">show</span>()
+<span class="fn">print</span>(<span class="fn">f"Change points detected at: {changes}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /cusum -->
+
+<!-- ═══════════════ OPTIMIZATION ═══════════════ -->
+<div class="section" id="sec-optimization">
+<div class="section-title">Optimization: LP / IP / Stochastic</div>
+<div class="section-sub">Turn decisions into math: define variables, objective, constraints</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Logical Constraints Cheat Sheet</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Logic</th><th>Constraint</th></tr></thead>
+      <tbody>
+        <tr><td>If A then B</td><td>yB ≥ yA</td></tr>
+        <tr><td>If A then B or C</td><td>yB + yC ≥ yA</td></tr>
+        <tr><td>Exactly one of A, B</td><td>yA + yB = 1</td></tr>
+        <tr><td>At least one of A, B</td><td>yA + yB ≥ 1</td></tr>
+        <tr><td>At most one of A, B</td><td>yA + yB ≤ 1</td></tr>
+        <tr><td>Neither A nor B</td><td>yA = 0, yB = 0</td></tr>
+        <tr><td>Amount only if facility open</td><td>xi ≤ U·yi (U = big-M)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code — LP &amp; IP</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(lpSolve)  <span class="cmt"># LP; use lpSolveAPI for IP</span>
+
+<span class="cmt"># LP example: maximize 5x1 + 4x2 s.t. 6x1+4x2≤24, x1+2x2≤6</span>
+obj  <span class="op">&lt;-</span> <span class="fn">c</span>(<span class="num">5</span>, <span class="num">4</span>)           <span class="cmt"># objective coefficients</span>
+con  <span class="op">&lt;-</span> <span class="fn">rbind</span>(<span class="fn">c</span>(<span class="num">6</span>, <span class="num">4</span>),     <span class="cmt"># constraint matrix</span>
+              <span class="fn">c</span>(<span class="num">1</span>, <span class="num">2</span>))
+dir  <span class="op">&lt;-</span> <span class="fn">c</span>(<span class="str">"&lt;="</span>, <span class="str">"&lt;="</span>)
+rhs  <span class="op">&lt;-</span> <span class="fn">c</span>(<span class="num">24</span>, <span class="num">6</span>)
+sol  <span class="op">&lt;-</span> <span class="fn">lp</span>(<span class="str">"max"</span>, obj, con, dir, rhs)
+sol<span class="op">$</span>objval; sol<span class="op">$</span>solution
+
+<span class="cmt"># Integer/binary vars: add int.vec or bin.vec</span>
+sol_ip <span class="op">&lt;-</span> <span class="fn">lp</span>(<span class="str">"max"</span>, obj, con, dir, rhs,
+             int.vec <span class="op">=</span> <span class="fn">c</span>(<span class="num">1</span>, <span class="num">2</span>))  <span class="cmt"># both vars must be integers</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">scipy.optimize</span> <span class="kw">import</span> linprog
+<span class="kw">from</span> <span class="pkg">pulp</span> <span class="kw">import</span> <span class="op">*</span>  <span class="cmt"># pip install pulp — handles LP + IP</span>
+
+<span class="cmt"># PuLP example: maximize 5x1 + 4x2 s.t. 6x1+4x2≤24, x1+2x2≤6</span>
+prob <span class="op">=</span> <span class="fn">LpProblem</span>(<span class="str">"example"</span>, <span class="fn">LpMaximize</span>)
+
+<span class="cmt"># Decision variables (continuous LP)</span>
+x1 <span class="op">=</span> <span class="fn">LpVariable</span>(<span class="str">"x1"</span>, lowBound<span class="op">=</span><span class="num">0</span>)
+x2 <span class="op">=</span> <span class="fn">LpVariable</span>(<span class="str">"x2"</span>, lowBound<span class="op">=</span><span class="num">0</span>)
+
+<span class="cmt"># For binary/integer: cat='Binary' or cat='Integer'</span>
+y1 <span class="op">=</span> <span class="fn">LpVariable</span>(<span class="str">"y1"</span>, cat<span class="op">=</span><span class="str">"Binary"</span>)
+
+prob <span class="op">+=</span> <span class="num">5</span><span class="op">*</span>x1 <span class="op">+</span> <span class="num">4</span><span class="op">*</span>x2           <span class="cmt"># objective</span>
+prob <span class="op">+=</span> <span class="num">6</span><span class="op">*</span>x1 <span class="op">+</span> <span class="num">4</span><span class="op">*</span>x2 <span class="op">&lt;=</span> <span class="num">24</span>      <span class="cmt"># constraint 1</span>
+prob <span class="op">+=</span> x1 <span class="op">+</span> <span class="num">2</span><span class="op">*</span>x2 <span class="op">&lt;=</span> <span class="num">6</span>          <span class="cmt"># constraint 2</span>
+
+prob.<span class="fn">solve</span>(<span class="fn">PULP_CBC_CMD</span>(msg<span class="op">=</span><span class="num">0</span>))
+<span class="fn">print</span>(<span class="fn">f"x1={x1.value():.2f}, x2={x2.value():.2f}, obj={prob.objective.value():.2f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /optimization -->
+
+<!-- ═══════════════ DoE ═══════════════ -->
+<div class="section" id="sec-doe">
+<div class="section-title">A/B Testing &amp; Design of Experiments</div>
+<div class="section-sub">Test whether changes actually make a difference — and separate effects cleanly</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Key Concepts</div></div>
+  <div class="card-body">
+    <div class="facts">
+      <div class="fact"><div class="fact-key">Randomization</div><div class="fact-val">Random assignment removes confounding bias</div></div>
+      <div class="fact"><div class="fact-key">Blocking</div><div class="fact-val">Group similar units; randomize within blocks</div></div>
+      <div class="fact"><div class="fact-key">Interaction effect</div><div class="fact-val">Effect of A depends on level of B → lines not parallel</div></div>
+      <div class="fact"><div class="fact-key">A/B vs Bandit</div><div class="fact-val">A/B = clean 2-option test. Bandit = many options, minimize regret.</div></div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># A/B test — compare means (t-test)</span>
+<span class="fn">t.test</span>(group_a, group_b, alternative <span class="op">=</span> <span class="str">"two.sided"</span>)
+<span class="cmt"># p < 0.05 → statistically significant difference</span>
+
+<span class="cmt"># Non-parametric (medians, non-normal)</span>
+<span class="fn">wilcox.test</span>(group_a, group_b)
+
+<span class="cmt"># Compare proportions (binary rates)</span>
+<span class="fn">prop.test</span>(<span class="fn">c</span>(successes_a, successes_b), <span class="fn">c</span>(n_a, n_b))
+
+<span class="cmt"># Factorial design (2-factor ANOVA)</span>
+model_anova <span class="op">&lt;-</span> <span class="fn">aov</span>(response <span class="op">~</span> factorA <span class="op">*</span> factorB, data <span class="op">=</span> df)
+<span class="fn">summary</span>(model_anova)
+<span class="cmt"># factorA:factorB row = interaction effect</span>
+
+<span class="cmt"># Interaction plot</span>
+<span class="fn">interaction.plot</span>(df<span class="op">$</span>factorA, df<span class="op">$</span>factorB, df<span class="op">$</span>response)
+<span class="cmt"># Parallel lines = no interaction; crossing = interaction</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">scipy</span> <span class="kw">import</span> stats
+<span class="kw">import</span> <span class="pkg">statsmodels.formula.api</span> <span class="kw">as</span> smf
+<span class="kw">import</span> <span class="pkg">pingouin</span> <span class="kw">as</span> pg  <span class="cmt"># pip install pingouin</span>
+
+<span class="cmt"># A/B test — compare means</span>
+t_stat, p_val <span class="op">=</span> stats.<span class="fn">ttest_ind</span>(group_a, group_b)
+<span class="fn">print</span>(<span class="fn">f"p-value: {p_val:.4f}"</span>)  <span class="cmt"># < 0.05 = significant</span>
+
+<span class="cmt"># Non-parametric (medians, non-normal)</span>
+stat, p <span class="op">=</span> stats.<span class="fn">mannwhitneyu</span>(group_a, group_b)
+
+<span class="cmt"># Compare proportions</span>
+stat, p <span class="op">=</span> stats.<span class="fn">chi2_contingency</span>([[suc_a, n_a<span class="op">-</span>suc_a],[suc_b, n_b<span class="op">-</span>suc_b]])[:2]
+
+<span class="cmt"># Factorial 2-way ANOVA</span>
+model <span class="op">=</span> smf.<span class="fn">ols</span>(<span class="str">'response ~ C(factorA) * C(factorB)'</span>, data<span class="op">=</span>df).<span class="fn">fit</span>()
+anova_table <span class="op">=</span> pg.<span class="fn">anova</span>(dv<span class="op">=</span><span class="str">'response'</span>, between<span class="op">=</span>[<span class="str">'factorA'</span>, <span class="str">'factorB'</span>], data<span class="op">=</span>df)
+<span class="fn">print</span>(anova_table)  <span class="cmt"># p-unc for interaction effect</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /doe -->
+
+<!-- ═══════════════ SIMULATION ═══════════════ -->
+<div class="section" id="sec-simulation">
+<div class="section-title">Simulation &amp; Queuing</div>
+<div class="section-sub">Model systems under randomness. ρ = λ/(s·μ). If ρ ≥ 1, queue grows without bound.</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Queuing Formula</div></div>
+  <div class="card-body">
+    <div class="formula">ρ = λ / (s · μ)    where: λ = arrival rate, s = # servers, μ = 1/avg_service_time</div>
+    <table class="ref-table" style="margin-top:10px">
+      <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>λ (arrivals) ↑</td><td>ρ <span class="param-up">↑</span>, wait times <span class="param-up">↑</span></td></tr>
+        <tr><td>s (servers) ↑</td><td>ρ <span class="param-down">↓</span>, wait times <span class="param-down">↓</span></td></tr>
+        <tr><td>Service time ↑</td><td>μ <span class="param-down">↓</span>, ρ <span class="param-up">↑</span>, waits <span class="param-up">↑</span></td></tr>
+        <tr><td>ρ ≥ 1</td><td>Queue grows without bound → HIGH waits</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn" style="margin-top:10px">Run MANY simulations. One run is misleading. Stop when the running average stabilizes.</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><div class="card-title">Code</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(simmer)  <span class="cmt"># discrete-event simulation</span>
+
+<span class="cmt"># M/M/1 queue simulation</span>
+lambda <span class="op">&lt;-</span> <span class="num">4</span>   <span class="cmt"># arrivals per hour</span>
+mu     <span class="op">&lt;-</span> <span class="num">5</span>   <span class="cmt"># service rate per hour</span>
+rho    <span class="op">&lt;-</span> lambda <span class="op">/</span> mu  <span class="cmt"># utilization (must be < 1)</span>
+
+customer <span class="op">&lt;-</span> <span class="fn">trajectory</span>(<span class="str">"customer"</span>) <span class="op">%&gt;%</span>
+  <span class="fn">seize</span>(<span class="str">"server"</span>, <span class="num">1</span>) <span class="op">%&gt;%</span>
+  <span class="fn">timeout</span>(<span class="kw">function</span>() <span class="fn">rexp</span>(<span class="num">1</span>, mu)) <span class="op">%&gt;%</span>
+  <span class="fn">release</span>(<span class="str">"server"</span>, <span class="num">1</span>)
+
+<span class="cmt"># Run many replications — 1 run is misleading!</span>
+results <span class="op">&lt;-</span> <span class="fn">replicate</span>(<span class="num">100</span>, {
+  env <span class="op">&lt;-</span> <span class="fn">simmer</span>() <span class="op">%&gt;%</span>
+    <span class="fn">add_resource</span>(<span class="str">"server"</span>, capacity <span class="op">=</span> <span class="num">1</span>) <span class="op">%&gt;%</span>
+    <span class="fn">add_generator</span>(<span class="str">"customer"</span>, customer, <span class="kw">function</span>() <span class="fn">rexp</span>(<span class="num">1</span>, lambda)) <span class="op">%&gt;%</span>
+    <span class="fn">run</span>(<span class="num">1000</span>)
+  <span class="fn">get_mon_arrivals</span>(env)<span class="op">$</span>flow_time <span class="op">%&gt;%</span> <span class="fn">mean</span>()
+})
+<span class="fn">mean</span>(results)  <span class="cmt"># average flow time across all runs</span></pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">simpy</span>      <span class="cmt"># pip install simpy</span>
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="pkg">random</span>
+
+lam <span class="op">=</span> <span class="num">4</span>   <span class="cmt"># arrivals/hr</span>
+mu  <span class="op">=</span> <span class="num">5</span>   <span class="cmt"># service rate/hr</span>
+rho <span class="op">=</span> lam <span class="op">/</span> mu; <span class="fn">print</span>(<span class="fn">f"ρ = {rho:.2f}"</span>)  <span class="cmt"># must be < 1</span>
+
+wait_times <span class="op">=</span> []
+
+<span class="kw">def</span> <span class="fn">customer</span>(env, server, arrival_time):
+    <span class="kw">with</span> server.<span class="fn">request</span>() <span class="kw">as</span> req:
+        <span class="kw">yield</span> req
+        wait_times.<span class="fn">append</span>(env.now <span class="op">-</span> arrival_time)
+        <span class="kw">yield</span> env.<span class="fn">timeout</span>(random.<span class="fn">expovariate</span>(mu))
+
+<span class="kw">def</span> <span class="fn">arrivals</span>(env, server):
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">yield</span> env.<span class="fn">timeout</span>(random.<span class="fn">expovariate</span>(lam))
+        env.<span class="fn">process</span>(<span class="fn">customer</span>(env, server, env.now))
+
+<span class="cmt"># Run many replications</span>
+all_waits <span class="op">=</span> []
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">100</span>):
+    wait_times <span class="op">=</span> []
+    env <span class="op">=</span> simpy.<span class="fn">Environment</span>()
+    server <span class="op">=</span> simpy.<span class="fn">Resource</span>(env, capacity<span class="op">=</span><span class="num">1</span>)
+    env.<span class="fn">process</span>(<span class="fn">arrivals</span>(env, server))
+    env.<span class="fn">run</span>(until<span class="op">=</span><span class="num">1000</span>)
+    all_waits.<span class="fn">append</span>(np.<span class="fn">mean</span>(wait_times))
+<span class="fn">print</span>(<span class="fn">f"Avg wait: {np.mean(all_waits):.3f}"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /simulation -->
+
+<!-- ═══════════════ OUTLIERS ═══════════════ -->
+<div class="section" id="sec-outliers">
+<div class="section-title">Detecting &amp; Treating Outliers</div>
+<div class="section-sub">Always remove outliers BEFORE scaling. Outliers distort scale and cluster centers.</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">When to remove vs. keep</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Situation</th><th>Action</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Data entry error (e.g. age = 999)</td><td>Remove or correct</td><td>Not a real observation</td></tr>
+        <tr><td>Legitimate but extreme (e.g. $1B sale)</td><td>Keep — or model separately</td><td>Real signal; removing distorts the distribution</td></tr>
+        <tr><td>For clustering</td><td>Remove first, then scale</td><td>Outlier pulls cluster centers; distorts distances</td></tr>
+        <tr><td>For regression</td><td>Investigate — consider robust regression</td><td>High-leverage points can dominate the fit</td></tr>
+        <tr><td>For SVM/KNN</td><td>Remove if clearly erroneous</td><td>Distance-based models are sensitive to outliers</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">Outlier ≠ misclassified. An outlier is far from others in feature space. A misclassified point is on the wrong side of a decision boundary.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Detection Methods</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Method</th><th>Rule</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td>IQR method</td><td>Below Q1 − 1.5×IQR or above Q3 + 1.5×IQR</td><td>General use; robust to skew</td></tr>
+        <tr><td>Z-score</td><td>|z| &gt; 3 (i.e. &gt; 3 std devs from mean)</td><td>Roughly normal distributions</td></tr>
+        <tr><td>Visual (boxplot)</td><td>Points beyond whiskers</td><td>Quick check on individual columns</td></tr>
+        <tr><td>Isolation Forest</td><td>ML-based; anomaly score per point</td><td>High-dimensional data, multivariate outliers</td></tr>
+        <tr><td>LOF (Local Outlier Factor)</td><td>Density-based local anomaly score</td><td>When outliers are relative to local neighborhood</td></tr>
+        <tr><td>Mahalanobis distance</td><td>Distance accounting for correlations between vars</td><td>Multivariate normal data</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Code — Detection &amp; Removal</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># ── 1. Visual inspection ───────────────────────────────</span>
+<span class="pkg">library</span>(tidyverse)
+df <span class="op">%&gt;%</span> <span class="fn">pivot_longer</span>(<span class="fn">everything</span>()) <span class="op">%&gt;%</span>
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(name, value)) <span class="op">+</span> <span class="fn">geom_boxplot</span>() <span class="op">+</span> <span class="fn">coord_flip</span>()
+
+<span class="cmt"># ── 2. IQR method (per column) ────────────────────────</span>
+remove_outliers_iqr <span class="op">&lt;-</span> <span class="kw">function</span>(df, cols) {
+  <span class="kw">for</span> (col <span class="kw">in</span> cols) {
+    Q1  <span class="op">&lt;-</span> <span class="fn">quantile</span>(df[[col]], <span class="num">0.25</span>, na.rm <span class="op">=</span> <span class="num">TRUE</span>)
+    Q3  <span class="op">&lt;-</span> <span class="fn">quantile</span>(df[[col]], <span class="num">0.75</span>, na.rm <span class="op">=</span> <span class="num">TRUE</span>)
+    IQR <span class="op">&lt;-</span> Q3 <span class="op">-</span> Q1
+    df  <span class="op">&lt;-</span> df[df[[col]] <span class="op">&gt;=</span> Q1 <span class="op">-</span> <span class="num">1.5</span><span class="op">*</span>IQR <span class="op">&amp;</span>
+                df[[col]] <span class="op">&lt;=</span> Q3 <span class="op">+</span> <span class="num">1.5</span><span class="op">*</span>IQR, ]
+  }
+  df
+}
+clean_df <span class="op">&lt;-</span> <span class="fn">remove_outliers_iqr</span>(df, <span class="fn">c</span>(<span class="str">"col1"</span>, <span class="str">"col2"</span>))
+
+<span class="cmt"># ── 3. Z-score method ─────────────────────────────────</span>
+z_scores <span class="op">&lt;-</span> <span class="kw">function</span>(x) <span class="fn">abs</span>((x <span class="op">-</span> <span class="fn">mean</span>(x, na.rm<span class="op">=</span>T)) <span class="op">/</span> <span class="fn">sd</span>(x, na.rm<span class="op">=</span>T))
+clean_df <span class="op">&lt;-</span> df[<span class="fn">apply</span>(df, <span class="num">1</span>, <span class="kw">function</span>(row) <span class="fn">all</span>(<span class="fn">z_scores</span>(row) <span class="op">&lt;</span> <span class="num">3</span>)), ]
+
+<span class="cmt"># ── 4. Isolation Forest ───────────────────────────────</span>
+<span class="pkg">library</span>(isotree)
+iso <span class="op">&lt;-</span> <span class="fn">isolation.forest</span>(df, ntrees <span class="op">=</span> <span class="num">100</span>)
+scores <span class="op">&lt;-</span> <span class="fn">predict</span>(iso, df)
+clean_df <span class="op">&lt;-</span> df[scores <span class="op">&lt;</span> <span class="num">0.5</span>, ]  <span class="cmt"># score > 0.5 = likely outlier</span>
+
+<span class="cmt"># ── 5. Mahalanobis distance ───────────────────────────</span>
+mah_dist <span class="op">&lt;-</span> <span class="fn">mahalanobis</span>(df, <span class="fn">colMeans</span>(df), <span class="fn">cov</span>(df))
+threshold <span class="op">&lt;-</span> <span class="fn">qchisq</span>(<span class="num">0.975</span>, df <span class="op">=</span> <span class="fn">ncol</span>(df))  <span class="cmt"># chi-sq critical value</span>
+clean_df <span class="op">&lt;-</span> df[mah_dist <span class="op">&lt;</span> threshold, ]</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">from</span> <span class="pkg">scipy</span> <span class="kw">import</span> stats
+<span class="kw">from</span> <span class="pkg">sklearn.ensemble</span> <span class="kw">import</span> IsolationForest
+<span class="kw">from</span> <span class="pkg">sklearn.neighbors</span> <span class="kw">import</span> LocalOutlierFactor
+
+<span class="cmt"># ── 1. Visual inspection ───────────────────────────────</span>
+df.<span class="fn">boxplot</span>(figsize<span class="op">=</span>(<span class="num">12</span>, <span class="num">4</span>)); plt.<span class="fn">show</span>()
+
+<span class="cmt"># ── 2. IQR method ─────────────────────────────────────</span>
+Q1, Q3 <span class="op">=</span> df.<span class="fn">quantile</span>(<span class="num">0.25</span>), df.<span class="fn">quantile</span>(<span class="num">0.75</span>)
+IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1
+mask <span class="op">=</span> <span class="op">~</span>((df <span class="op">&lt;</span> (Q1 <span class="op">-</span> <span class="num">1.5</span><span class="op">*</span>IQR)) <span class="op">|</span> (df <span class="op">&gt;</span> (Q3 <span class="op">+</span> <span class="num">1.5</span><span class="op">*</span>IQR))).<span class="fn">any</span>(axis<span class="op">=</span><span class="num">1</span>)
+clean_df <span class="op">=</span> df[mask]
+<span class="fn">print</span>(<span class="fn">f"Removed {(~mask).sum()} outlier rows"</span>)
+
+<span class="cmt"># ── 3. Z-score method ─────────────────────────────────</span>
+z_scores <span class="op">=</span> np.<span class="fn">abs</span>(stats.<span class="fn">zscore</span>(df.<span class="fn">select_dtypes</span>(include<span class="op">=</span>np.number)))
+clean_df <span class="op">=</span> df[(z_scores <span class="op">&lt;</span> <span class="num">3</span>).<span class="fn">all</span>(axis<span class="op">=</span><span class="num">1</span>)]
+
+<span class="cmt"># ── 4. Isolation Forest ───────────────────────────────</span>
+iso <span class="op">=</span> <span class="fn">IsolationForest</span>(contamination<span class="op">=</span><span class="num">0.05</span>, random_state<span class="op">=</span><span class="num">42</span>)
+preds <span class="op">=</span> iso.<span class="fn">fit_predict</span>(df.<span class="fn">select_dtypes</span>(include<span class="op">=</span>np.number))
+clean_df <span class="op">=</span> df[preds <span class="op">==</span> <span class="num">1</span>]  <span class="cmt"># -1 = outlier, 1 = inlier</span>
+
+<span class="cmt"># ── 5. Local Outlier Factor ───────────────────────────</span>
+lof <span class="op">=</span> <span class="fn">LocalOutlierFactor</span>(n_neighbors<span class="op">=</span><span class="num">20</span>, contamination<span class="op">=</span><span class="num">0.05</span>)
+preds <span class="op">=</span> lof.<span class="fn">fit_predict</span>(df.<span class="fn">select_dtypes</span>(include<span class="op">=</span>np.number))
+clean_df <span class="op">=</span> df[preds <span class="op">==</span> <span class="num">1</span>]
+
+<span class="cmt"># ── 6. Mahalanobis distance ───────────────────────────</span>
+<span class="kw">from</span> <span class="pkg">scipy.spatial.distance</span> <span class="kw">import</span> cdist
+X <span class="op">=</span> df.<span class="fn">select_dtypes</span>(include<span class="op">=</span>np.number)
+cov_inv <span class="op">=</span> np.linalg.<span class="fn">inv</span>(X.<span class="fn">cov</span>().<span class="fn">values</span>)
+mu <span class="op">=</span> X.<span class="fn">mean</span>().<span class="fn">values</span>
+mah <span class="op">=</span> [np.<span class="fn">sqrt</span>((r<span class="op">-</span>mu) @ cov_inv @ (r<span class="op">-</span>mu)) <span class="kw">for</span> r <span class="kw">in</span> X.<span class="fn">values</span>]
+threshold <span class="op">=</span> np.<span class="fn">percentile</span>(mah, <span class="num">97.5</span>)
+clean_df <span class="op">=</span> df[np.<span class="fn">array</span>(mah) <span class="op">&lt;</span> threshold]</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Treatment Options</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Treatment</th><th>How</th><th>When to use</th></tr></thead>
+      <tbody>
+        <tr><td>Remove the row</td><td>Drop observations exceeding threshold</td><td>Data entry error or model doesn't need them</td></tr>
+        <tr><td>Cap / Winsorize</td><td>Replace extreme values with Pth percentile value</td><td>Want to keep row but limit influence of extreme value</td></tr>
+        <tr><td>Transform</td><td>log(x), sqrt(x), Box-Cox</td><td>Right-skewed distribution; compresses large values</td></tr>
+        <tr><td>Robust model</td><td>Use median-based or Huber regression</td><td>Outliers are real and should influence model less</td></tr>
+        <tr><td>Separate segment</td><td>Model outlier group independently</td><td>Outliers form a meaningful subpopulation</td></tr>
+      </tbody>
+    </table>
+    <div class="code-tabs" style="margin-top:12px">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="cmt"># Winsorize (cap at 1st/99th percentile)</span>
+<span class="pkg">library</span>(DescTools)
+df<span class="op">$</span>col1_w <span class="op">&lt;-</span> <span class="fn">Winsorize</span>(df<span class="op">$</span>col1, probs <span class="op">=</span> <span class="fn">c</span>(<span class="num">0.01</span>, <span class="num">0.99</span>))
+
+<span class="cmt"># Log transform (for right-skewed, positive values)</span>
+df<span class="op">$</span>col1_log <span class="op">&lt;-</span> <span class="fn">log1p</span>(df<span class="op">$</span>col1)  <span class="cmt"># log1p = log(1+x), handles zeros</span>
+
+<span class="cmt"># Box-Cox transform (finds optimal lambda)</span>
+<span class="pkg">library</span>(MASS)
+bc <span class="op">&lt;-</span> <span class="fn">boxcox</span>(<span class="fn">lm</span>(col1 <span class="op">~</span> <span class="num">1</span>, data <span class="op">=</span> df))
+lambda <span class="op">&lt;-</span> bc<span class="op">$</span>x[<span class="fn">which.max</span>(bc<span class="op">$</span>y)]
+df<span class="op">$</span>col1_bc <span class="op">&lt;-</span> (df<span class="op">$</span>col1<span class="op">^</span>lambda <span class="op">-</span> <span class="num">1</span>) <span class="op">/</span> lambda</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">from</span> <span class="pkg">scipy</span> <span class="kw">import</span> stats
+<span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> PowerTransformer
+
+<span class="cmt"># Winsorize (cap at 1st/99th percentile)</span>
+df[<span class="str">'col1_w'</span>] <span class="op">=</span> df[<span class="str">'col1'</span>].<span class="fn">clip</span>(lower<span class="op">=</span>df[<span class="str">'col1'</span>].<span class="fn">quantile</span>(<span class="num">0.01</span>),
+                                 upper<span class="op">=</span>df[<span class="str">'col1'</span>].<span class="fn">quantile</span>(<span class="num">0.99</span>))
+
+<span class="cmt"># Log transform</span>
+df[<span class="str">'col1_log'</span>] <span class="op">=</span> np.<span class="fn">log1p</span>(df[<span class="str">'col1'</span>])  <span class="cmt"># log(1+x), handles zeros</span>
+
+<span class="cmt"># Box-Cox (sklearn's PowerTransformer)</span>
+pt <span class="op">=</span> <span class="fn">PowerTransformer</span>(method<span class="op">=</span><span class="str">'box-cox'</span>)  <span class="cmt"># requires positive values</span>
+df[<span class="str">'col1_bc'</span>] <span class="op">=</span> pt.<span class="fn">fit_transform</span>(df[[<span class="str">'col1'</span>]])
+
+<span class="cmt"># Yeo-Johnson (works with zero/negative values)</span>
+pt_yj <span class="op">=</span> <span class="fn">PowerTransformer</span>(method<span class="op">=</span><span class="str">'yeo-johnson'</span>)
+df[<span class="str">'col1_yj'</span>] <span class="op">=</span> pt_yj.<span class="fn">fit_transform</span>(df[[<span class="str">'col1'</span>]])</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /outliers -->
+
+<!-- ═══════════════ MISSING DATA ═══════════════ -->
+<div class="section" id="sec-missing">
+<div class="section-title">Missing Data</div>
+<div class="section-sub">Choose strategy based on whether the value is predictable and whether the reason for missingness is informative.</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Decision Tree — Which Strategy?</div></div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <div class="step-content"><div class="step-title">Is the missing value predictable from other columns?</div><div class="step-desc">→ YES: use regression imputation. → NO: go to step 2.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <div class="step-content"><div class="step-title">Can you classify WHY it's missing?</div><div class="step-desc">→ YES: use two-stage imputation (classify reason → impute per reason). → NO: go to step 3.</div></div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <div class="step-content"><div class="step-title">Is the fact that it's missing informative?</div><div class="step-desc">→ YES: add binary flag column (0 = present, 1 = missing). → NO: mean impute as baseline.</div></div>
+      </div>
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Strategy</th><th>When to use</th><th>Limitation</th></tr></thead>
+      <tbody>
+        <tr><td>Mean/median impute</td><td>Simple baseline; value not predictable</td><td>Underestimates variance; ignores relationships</td></tr>
+        <tr><td>Regression impute</td><td>Value IS predictable from other vars</td><td>Assumes correct model; inflates R²</td></tr>
+        <tr><td>Two-stage impute</td><td>Reason for missing classifiable; value predictable</td><td>More complex; requires enough data per class</td></tr>
+        <tr><td>Binary flag (0/1)</td><td>Missingness itself is informative</td><td>Doesn't recover the value</td></tr>
+        <tr><td>Multiple imputation (MICE)</td><td>Want uncertainty-aware imputation</td><td>Computationally expensive</td></tr>
+        <tr><td>Drop row</td><td>Very few missing; missingness is random</td><td>Reduces data; biased if not MCAR</td></tr>
+        <tr><td>Drop column</td><td>&gt;60–70% missing with no salvageable signal</td><td>Loses potentially useful variable</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info">Missing mechanisms: <strong>MCAR</strong> (Missing Completely At Random — safe to drop), <strong>MAR</strong> (Missing At Random — impute), <strong>MNAR</strong> (Missing Not At Random — flag + impute).</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Code — All Strategies</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(tidyverse); <span class="pkg">library</span>(mice); <span class="pkg">library</span>(VIM)
+
+<span class="cmt"># ── Diagnose missing values ────────────────────────────</span>
+<span class="fn">colSums</span>(<span class="fn">is.na</span>(df))
+<span class="fn">md.pattern</span>(df)       <span class="cmt"># mice: visual missing pattern</span>
+<span class="fn">aggr</span>(df, col<span class="op">=</span><span class="fn">c</span>(<span class="str">'navy'</span>,<span class="str">'red'</span>))  <span class="cmt"># VIM: plot missingness</span>
+
+<span class="cmt"># ── Mean/median impute ────────────────────────────────</span>
+df<span class="op">$</span>col1[<span class="fn">is.na</span>(df<span class="op">$</span>col1)] <span class="op">&lt;-</span> <span class="fn">mean</span>(df<span class="op">$</span>col1, na.rm <span class="op">=</span> <span class="num">TRUE</span>)
+<span class="cmt"># Or via caret:</span>
+pre <span class="op">&lt;-</span> <span class="fn">preProcess</span>(df, method <span class="op">=</span> <span class="str">"medianImpute"</span>)
+df_imp <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, df)
+
+<span class="cmt"># ── Regression impute ─────────────────────────────────</span>
+<span class="cmt"># Fit model on complete rows, predict for missing</span>
+complete_rows <span class="op">&lt;-</span> df[!<span class="fn">is.na</span>(df<span class="op">$</span>col1), ]
+missing_rows  <span class="op">&lt;-</span> df[<span class="fn">is.na</span>(df<span class="op">$</span>col1), ]
+reg_model <span class="op">&lt;-</span> <span class="fn">lm</span>(col1 <span class="op">~</span> col2 <span class="op">+</span> col3 <span class="op">+</span> col4, data <span class="op">=</span> complete_rows)
+df<span class="op">$</span>col1[<span class="fn">is.na</span>(df<span class="op">$</span>col1)] <span class="op">&lt;-</span> <span class="fn">predict</span>(reg_model, missing_rows)
+
+<span class="cmt"># ── Binary flag ───────────────────────────────────────</span>
+df<span class="op">$</span>col1_missing <span class="op">&lt;-</span> <span class="fn">as.integer</span>(<span class="fn">is.na</span>(df<span class="op">$</span>col1))
+df<span class="op">$</span>col1[<span class="fn">is.na</span>(df<span class="op">$</span>col1)] <span class="op">&lt;-</span> <span class="num">0</span>  <span class="cmt"># fill value (0 or mean)</span>
+
+<span class="cmt"># ── Multiple imputation (MICE) ────────────────────────</span>
+imp <span class="op">&lt;-</span> <span class="fn">mice</span>(df, m <span class="op">=</span> <span class="num">5</span>, method <span class="op">=</span> <span class="str">"pmm"</span>, seed <span class="op">=</span> <span class="num">42</span>)
+df_complete <span class="op">&lt;-</span> <span class="fn">complete</span>(imp, <span class="num">1</span>)  <span class="cmt"># first of 5 imputed datasets</span>
+<span class="cmt"># For proper uncertainty: fit model on each, pool results</span>
+fit_mice <span class="op">&lt;-</span> <span class="fn">with</span>(imp, <span class="fn">lm</span>(y <span class="op">~</span> col1 <span class="op">+</span> col2))
+<span class="fn">summary</span>(<span class="fn">pool</span>(fit_mice))</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">from</span> <span class="pkg">sklearn.impute</span> <span class="kw">import</span> SimpleImputer, KNNImputer, IterativeImputer
+<span class="kw">from</span> <span class="pkg">sklearn.experimental</span> <span class="kw">import</span> enable_iterative_imputer  <span class="cmt"># noqa</span>
+
+<span class="cmt"># ── Diagnose missing values ────────────────────────────</span>
+<span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())
+<span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">mean</span>() <span class="op">*</span> <span class="num">100</span>)  <span class="cmt"># % missing per column</span>
+
+<span class="cmt"># ── Mean/median impute ────────────────────────────────</span>
+imp_mean <span class="op">=</span> <span class="fn">SimpleImputer</span>(strategy<span class="op">=</span><span class="str">'mean'</span>)      <span class="cmt"># or 'median', 'most_frequent'</span>
+X_imp <span class="op">=</span> imp_mean.<span class="fn">fit_transform</span>(X_train)         <span class="cmt"># fit on train only!</span>
+X_val_imp <span class="op">=</span> imp_mean.<span class="fn">transform</span>(X_val)
+
+<span class="cmt"># ── KNN impute (uses neighbor values) ────────────────</span>
+imp_knn <span class="op">=</span> <span class="fn">KNNImputer</span>(n_neighbors<span class="op">=</span><span class="num">5</span>)
+X_imp <span class="op">=</span> imp_knn.<span class="fn">fit_transform</span>(X_train)
+
+<span class="cmt"># ── Iterative imputation (regression impute / MICE) ──</span>
+imp_iter <span class="op">=</span> <span class="fn">IterativeImputer</span>(max_iter<span class="op">=</span><span class="num">10</span>, random_state<span class="op">=</span><span class="num">42</span>)
+X_imp <span class="op">=</span> imp_iter.<span class="fn">fit_transform</span>(X_train)
+
+<span class="cmt"># ── Binary flag ───────────────────────────────────────</span>
+<span class="kw">for</span> col <span class="kw">in</span> df.<span class="fn">columns</span>[df.<span class="fn">isnull</span>().<span class="fn">any</span>()]:
+    df[<span class="fn">f'{col}_missing'</span>] <span class="op">=</span> df[col].<span class="fn">isnull</span>().<span class="fn">astype</span>(<span class="num">int</span>)
+df.<span class="fn">fillna</span>(<span class="num">0</span>, inplace<span class="op">=</span><span class="kw">True</span>)  <span class="cmt"># fill with 0 after flagging</span>
+
+<span class="cmt"># ── Pipeline: impute then scale ───────────────────────</span>
+<span class="kw">from</span> <span class="pkg">sklearn.pipeline</span> <span class="kw">import</span> Pipeline
+<span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> <span class="pkg">sklearn.ensemble</span> <span class="kw">import</span> RandomForestClassifier
+pipe <span class="op">=</span> <span class="fn">Pipeline</span>([
+    (<span class="str">'impute'</span>, <span class="fn">SimpleImputer</span>(strategy<span class="op">=</span><span class="str">'median'</span>)),
+    (<span class="str">'scale'</span>,  <span class="fn">StandardScaler</span>()),
+    (<span class="str">'model'</span>,  <span class="fn">RandomForestClassifier</span>())
+])
+pipe.<span class="fn">fit</span>(X_train, y_train)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /missing -->
+
+<!-- ═══════════════ EDA & FEATURE ENGINEERING ═══════════════ -->
+<div class="section" id="sec-eda">
+<div class="section-title">EDA &amp; Feature Engineering</div>
+<div class="section-sub">Understand your data before modeling. The best features often come from domain knowledge, not algorithms.</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">EDA Checklist</div></div>
+  <div class="card-body">
+    <div class="pipeline">
+      <div class="pipeline-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Shape &amp; types</div><div class="step-desc">How many rows/columns? What types are each column? Any unexpected types?</div></div></div>
+      <div class="pipeline-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Distributions</div><div class="step-desc">Histograms for numeric columns. Bar charts for categorical. Check for skew, multimodality.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Missing values</div><div class="step-desc">% missing per column. Is missingness random or structured?</div></div></div>
+      <div class="pipeline-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Outliers</div><div class="step-desc">Boxplots, z-scores. Are extreme values errors or real?</div></div></div>
+      <div class="pipeline-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Correlations</div><div class="step-desc">Correlation matrix / heatmap. High correlation → multicollinearity risk; PCA candidate.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">6</div><div class="step-content"><div class="step-title">Target variable</div><div class="step-desc">For classification: check class imbalance. For regression: check distribution and outliers in y.</div></div></div>
+      <div class="pipeline-step"><div class="step-num">7</div><div class="step-content"><div class="step-title">Relationships with target</div><div class="step-desc">Scatter plots (numeric x vs y). Box plots (categorical x vs numeric y).</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Code — EDA</div></div>
+  <div class="card-body">
+    <div class="code-tabs">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(tidyverse); <span class="pkg">library</span>(GGally); <span class="pkg">library</span>(corrplot)
+
+<span class="cmt"># ── Quick overview ─────────────────────────────────────</span>
+<span class="fn">glimpse</span>(df)
+<span class="fn">summary</span>(df)
+<span class="pkg">skimr</span><span class="op">::</span><span class="fn">skim</span>(df)  <span class="cmt"># rich summary with histograms</span>
+
+<span class="cmt"># ── Distributions ─────────────────────────────────────</span>
+df <span class="op">%&gt;%</span>
+  <span class="fn">pivot_longer</span>(<span class="fn">where</span>(is.numeric)) <span class="op">%&gt;%</span>
+  <span class="fn">ggplot</span>(<span class="fn">aes</span>(value)) <span class="op">+</span>
+  <span class="fn">geom_histogram</span>(bins <span class="op">=</span> <span class="num">30</span>) <span class="op">+</span>
+  <span class="fn">facet_wrap</span>(<span class="op">~</span>name, scales <span class="op">=</span> <span class="str">"free"</span>)
+
+<span class="cmt"># ── Correlation matrix ─────────────────────────────────</span>
+cor_matrix <span class="op">&lt;-</span> <span class="fn">cor</span>(df <span class="op">%&gt;%</span> <span class="fn">select</span>(<span class="fn">where</span>(is.numeric)), use <span class="op">=</span> <span class="str">"complete.obs"</span>)
+<span class="fn">corrplot</span>(cor_matrix, method <span class="op">=</span> <span class="str">"color"</span>, type <span class="op">=</span> <span class="str">"upper"</span>)
+
+<span class="cmt"># ── Pairs plot (small # of vars) ──────────────────────</span>
+<span class="fn">ggpairs</span>(df <span class="op">%&gt;%</span> <span class="fn">select</span>(col1, col2, col3, y))
+
+<span class="cmt"># ── Class imbalance (for classification) ──────────────</span>
+<span class="fn">table</span>(df<span class="op">$</span>y)
+<span class="fn">prop.table</span>(<span class="fn">table</span>(df<span class="op">$</span>y))
+
+<span class="cmt"># ── Relationship: numeric x vs numeric y ──────────────</span>
+<span class="fn">ggplot</span>(df, <span class="fn">aes</span>(col1, y)) <span class="op">+</span> <span class="fn">geom_point</span>(alpha <span class="op">=</span> <span class="num">0.3</span>) <span class="op">+</span> <span class="fn">geom_smooth</span>()</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">import</span> <span class="pkg">seaborn</span> <span class="kw">as</span> sns
+
+<span class="cmt"># ── Quick overview ─────────────────────────────────────</span>
+<span class="fn">print</span>(df.<span class="fn">shape</span>)
+<span class="fn">print</span>(df.<span class="fn">dtypes</span>)
+<span class="fn">print</span>(df.<span class="fn">describe</span>())
+<span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">mean</span>() <span class="op">*</span> <span class="num">100</span>)
+
+<span class="cmt"># ── Distributions ─────────────────────────────────────</span>
+df.<span class="fn">select_dtypes</span>(include<span class="op">=</span><span class="str">'number'</span>).<span class="fn">hist</span>(bins<span class="op">=</span><span class="num">30</span>, figsize<span class="op">=</span>(<span class="num">16</span>, <span class="num">10</span>))
+plt.<span class="fn">tight_layout</span>(); plt.<span class="fn">show</span>()
+
+<span class="cmt"># ── Correlation heatmap ────────────────────────────────</span>
+fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(figsize<span class="op">=</span>(<span class="num">12</span>, <span class="num">10</span>))
+sns.<span class="fn">heatmap</span>(df.<span class="fn">corr</span>(), annot<span class="op">=</span><span class="kw">True</span>, fmt<span class="op">=</span><span class="str">'.2f'</span>,
+            cmap<span class="op">=</span><span class="str">'coolwarm'</span>, center<span class="op">=</span><span class="num">0</span>, ax<span class="op">=</span>ax)
+plt.<span class="fn">show</span>()
+
+<span class="cmt"># ── Class imbalance ────────────────────────────────────</span>
+<span class="fn">print</span>(df[<span class="str">'y'</span>].<span class="fn">value_counts</span>(normalize<span class="op">=</span><span class="kw">True</span>))
+df[<span class="str">'y'</span>].<span class="fn">value_counts</span>().<span class="fn">plot</span>(kind<span class="op">=</span><span class="str">'bar'</span>); plt.<span class="fn">show</span>()
+
+<span class="cmt"># ── Pairplot (small # vars) ────────────────────────────</span>
+sns.<span class="fn">pairplot</span>(df[[<span class="str">'col1'</span>, <span class="str">'col2'</span>, <span class="str">'col3'</span>, <span class="str">'y'</span>]], hue<span class="op">=</span><span class="str">'y'</span>); plt.<span class="fn">show</span>()
+
+<span class="cmt"># ── One-liner rich EDA (optional) ─────────────────────</span>
+<span class="cmt"># pip install ydata-profiling</span>
+<span class="kw">from</span> <span class="pkg">ydata_profiling</span> <span class="kw">import</span> ProfileReport
+<span class="fn">ProfileReport</span>(df, title<span class="op">=</span><span class="str">"EDA Report"</span>).<span class="fn">to_file</span>(<span class="str">"eda.html"</span>)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Feature Engineering</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Technique</th><th>When to use</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Log / sqrt transform</td><td>Right-skewed numeric var</td><td>income → log(income)</td></tr>
+        <tr><td>Polynomial features</td><td>Nonlinear relationship with target</td><td>x → x, x²</td></tr>
+        <tr><td>Interaction terms</td><td>Effect of A depends on B</td><td>age × income</td></tr>
+        <tr><td>Binning / discretize</td><td>Nonlinear threshold effects</td><td>age → young/mid/senior</td></tr>
+        <tr><td>One-hot encoding</td><td>Nominal categorical variables</td><td>color → red, blue, green columns</td></tr>
+        <tr><td>Target encoding</td><td>High-cardinality categoricals</td><td>city → mean(y) per city (on train only)</td></tr>
+        <tr><td>Date features</td><td>Datetime columns</td><td>date → day_of_week, month, is_weekend</td></tr>
+        <tr><td>Lag features</td><td>Time series / sequential data</td><td>sales_t → sales_t-1, sales_t-7</td></tr>
+        <tr><td>Rolling stats</td><td>Time series trends</td><td>rolling 7-day mean, std</td></tr>
+        <tr><td>Ratio features</td><td>Relative magnitudes matter</td><td>profit / revenue = margin</td></tr>
+      </tbody>
+    </table>
+    <div class="code-tabs" style="margin-top:12px">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(tidyverse); <span class="pkg">library</span>(lubridate)
+
+df <span class="op">&lt;-</span> df <span class="op">%&gt;%</span> <span class="fn">mutate</span>(
+  <span class="cmt"># Log transform</span>
+  log_income <span class="op">=</span> <span class="fn">log1p</span>(income),
+
+  <span class="cmt"># Polynomial</span>
+  age_sq <span class="op">=</span> age<span class="op">^</span><span class="num">2</span>,
+
+  <span class="cmt"># Interaction</span>
+  age_income <span class="op">=</span> age <span class="op">*</span> income,
+
+  <span class="cmt"># Binning</span>
+  age_bin <span class="op">=</span> <span class="fn">cut</span>(age, breaks <span class="op">=</span> <span class="fn">c</span>(<span class="num">0</span>, <span class="num">25</span>, <span class="num">45</span>, <span class="num">65</span>, <span class="num">Inf</span>),
+               labels <span class="op">=</span> <span class="fn">c</span>(<span class="str">"young"</span>, <span class="str">"mid"</span>, <span class="str">"senior"</span>, <span class="str">"elderly"</span>)),
+
+  <span class="cmt"># Date features</span>
+  dow       <span class="op">=</span> <span class="fn">wday</span>(date, label <span class="op">=</span> <span class="num">TRUE</span>),
+  month     <span class="op">=</span> <span class="fn">month</span>(date),
+  is_weekend <span class="op">=</span> <span class="fn">wday</span>(date) <span class="op">%in%</span> <span class="fn">c</span>(<span class="num">1</span>, <span class="num">7</span>),
+
+  <span class="cmt"># Ratio</span>
+  margin <span class="op">=</span> profit <span class="op">/</span> revenue
+)
+
+<span class="cmt"># One-hot encode</span>
+<span class="pkg">library</span>(fastDummies)
+df <span class="op">&lt;-</span> <span class="fn">dummy_cols</span>(df, select_columns <span class="op">=</span> <span class="str">"category"</span>,
+                 remove_first_dummy <span class="op">=</span> <span class="num">TRUE</span>, remove_selected_columns <span class="op">=</span> <span class="num">TRUE</span>)
+
+<span class="cmt"># Lag features (time series)</span>
+df <span class="op">&lt;-</span> df <span class="op">%&gt;%</span>
+  <span class="fn">arrange</span>(date) <span class="op">%&gt;%</span>
+  <span class="fn">mutate</span>(sales_lag1 <span class="op">=</span> <span class="fn">lag</span>(sales, <span class="num">1</span>),
+         sales_roll7 <span class="op">=</span> <span class="fn">zoo::rollmean</span>(sales, <span class="num">7</span>, fill <span class="op">=</span> NA, align <span class="op">=</span> <span class="str">"right"</span>))</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">import</span> <span class="pkg">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="pkg">numpy</span> <span class="kw">as</span> np
+<span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> PolynomialFeatures
+
+<span class="cmt"># Log transform</span>
+df[<span class="str">'log_income'</span>] <span class="op">=</span> np.<span class="fn">log1p</span>(df[<span class="str">'income'</span>])
+
+<span class="cmt"># Polynomial features (x, x²)</span>
+poly <span class="op">=</span> <span class="fn">PolynomialFeatures</span>(degree<span class="op">=</span><span class="num">2</span>, include_bias<span class="op">=</span><span class="kw">False</span>)
+X_poly <span class="op">=</span> poly.<span class="fn">fit_transform</span>(df[[<span class="str">'age'</span>, <span class="str">'income'</span>]])
+
+<span class="cmt"># Interaction term</span>
+df[<span class="str">'age_income'</span>] <span class="op">=</span> df[<span class="str">'age'</span>] <span class="op">*</span> df[<span class="str">'income'</span>]
+
+<span class="cmt"># Binning</span>
+df[<span class="str">'age_bin'</span>] <span class="op">=</span> pd.<span class="fn">cut</span>(df[<span class="str">'age'</span>], bins<span class="op">=</span>[<span class="num">0</span>,<span class="num">25</span>,<span class="num">45</span>,<span class="num">65</span>,<span class="num">100</span>],
+                       labels<span class="op">=</span>[<span class="str">'young'</span>,<span class="str">'mid'</span>,<span class="str">'senior'</span>,<span class="str">'elderly'</span>])
+
+<span class="cmt"># One-hot encode</span>
+df <span class="op">=</span> pd.<span class="fn">get_dummies</span>(df, columns<span class="op">=</span>[<span class="str">'category'</span>], drop_first<span class="op">=</span><span class="kw">True</span>)
+
+<span class="cmt"># Date features</span>
+df[<span class="str">'date'</span>] <span class="op">=</span> pd.<span class="fn">to_datetime</span>(df[<span class="str">'date'</span>])
+df[<span class="str">'dow'</span>]        <span class="op">=</span> df[<span class="str">'date'</span>].dt.dayofweek
+df[<span class="str">'month'</span>]      <span class="op">=</span> df[<span class="str">'date'</span>].dt.month
+df[<span class="str">'is_weekend'</span>] <span class="op">=</span> df[<span class="str">'date'</span>].dt.dayofweek.<span class="fn">isin</span>([<span class="num">5</span>, <span class="num">6</span>]).<span class="fn">astype</span>(<span class="num">int</span>)
+
+<span class="cmt"># Lag features (time series)</span>
+df <span class="op">=</span> df.<span class="fn">sort_values</span>(<span class="str">'date'</span>)
+df[<span class="str">'sales_lag1'</span>]  <span class="op">=</span> df[<span class="str">'sales'</span>].<span class="fn">shift</span>(<span class="num">1</span>)
+df[<span class="str">'sales_roll7'</span>] <span class="op">=</span> df[<span class="str">'sales'</span>].<span class="fn">rolling</span>(<span class="num">7</span>).<span class="fn">mean</span>()
+
+<span class="cmt"># Target encoding (careful: fit on train only)</span>
+target_means <span class="op">=</span> train.<span class="fn">groupby</span>(<span class="str">'city'</span>)[<span class="str">'y'</span>].<span class="fn">mean</span>()
+df[<span class="str">'city_enc'</span>] <span class="op">=</span> df[<span class="str">'city'</span>].<span class="fn">map</span>(target_means)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><div class="card-title">Scaling Methods</div></div>
+  <div class="card-body">
+    <table class="ref-table">
+      <thead><tr><th>Method</th><th>Result</th><th>Use when</th></tr></thead>
+      <tbody>
+        <tr><td>Standardization (Z-score)</td><td>Mean=0, Std=1</td><td>Most models — SVM, KNN, PCA, regularized reg.</td></tr>
+        <tr><td>Min-Max normalization</td><td>Range [0, 1]</td><td>Neural networks; when bounded range needed</td></tr>
+        <tr><td>Robust scaling</td><td>Median=0, IQR=1</td><td>Data with outliers you want to keep</td></tr>
+        <tr><td>No scaling needed</td><td>—</td><td>Tree-based models (CART, RF) — they use splits</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">Always fit scaler on TRAINING data only. Apply (transform) to validation and test.</div>
+    <div class="code-tabs" style="margin-top:12px">
+      <div class="code-tab-header">
+        <div class="code-tab-btns">
+          <button class="code-tab-btn active" data-lang="r" onclick="switchCodeTab(this)">R</button>
+          <button class="code-tab-btn" data-lang="py" onclick="switchCodeTab(this)">Python</button>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <div class="code-pane active" data-lang="r">
+<pre><span class="pkg">library</span>(caret)
+<span class="cmt"># Standardize (center + scale) — fit on train, apply to all</span>
+pre  <span class="op">&lt;-</span> <span class="fn">preProcess</span>(train[, <span class="op">-</span><span class="num">1</span>], method <span class="op">=</span> <span class="fn">c</span>(<span class="str">"center"</span>, <span class="str">"scale"</span>))
+train_s <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, train)
+val_s   <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, val)
+test_s  <span class="op">&lt;-</span> <span class="fn">predict</span>(pre, test)
+
+<span class="cmt"># Min-Max normalization</span>
+pre_mm <span class="op">&lt;-</span> <span class="fn">preProcess</span>(train[, <span class="op">-</span><span class="num">1</span>], method <span class="op">=</span> <span class="str">"range"</span>)
+
+<span class="cmt"># Robust scaling (subtract median, divide by IQR)</span>
+robust_scale <span class="op">&lt;-</span> <span class="kw">function</span>(x) (x <span class="op">-</span> <span class="fn">median</span>(x)) <span class="op">/</span> <span class="fn">IQR</span>(x)</pre>
+      </div>
+      <div class="code-pane" data-lang="py">
+<pre><span class="kw">from</span> <span class="pkg">sklearn.preprocessing</span> <span class="kw">import</span> StandardScaler, MinMaxScaler, RobustScaler
+
+<span class="cmt"># Standardize — fit on train ONLY</span>
+scaler <span class="op">=</span> <span class="fn">StandardScaler</span>()
+X_train_s <span class="op">=</span> scaler.<span class="fn">fit_transform</span>(X_train)
+X_val_s   <span class="op">=</span> scaler.<span class="fn">transform</span>(X_val)
+X_test_s  <span class="op">=</span> scaler.<span class="fn">transform</span>(X_test)
+
+<span class="cmt"># Min-Max [0, 1]</span>
+mm <span class="op">=</span> <span class="fn">MinMaxScaler</span>()
+X_train_mm <span class="op">=</span> mm.<span class="fn">fit_transform</span>(X_train)
+
+<span class="cmt"># Robust scaler (outlier-resistant)</span>
+rob <span class="op">=</span> <span class="fn">RobustScaler</span>()
+X_train_r <span class="op">=</span> rob.<span class="fn">fit_transform</span>(X_train)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /eda -->
+
+</main>
+</div><!-- /layout -->
+
+<script>
+// ── Section navigation ──────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── Global language toggle ───────────────────────────────────
+let globalLang = 'r';
+
+function setLang(lang) {
+  globalLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.' + lang + '-btn').classList.add('active');
+
+  // Update all code panes to show the selected language
+  document.querySelectorAll('.code-pane').forEach(pane => {
+    pane.classList.toggle('active', pane.dataset.lang === lang);
+  });
+  document.querySelectorAll('.code-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+// ── Per-card code tab switch ─────────────────────────────────
+function switchCodeTab(btn) {
+  const lang = btn.dataset.lang;
+  const tabs = btn.closest('.code-tabs');
+  tabs.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+  tabs.querySelectorAll('.code-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  tabs.querySelector(`.code-pane[data-lang="${lang}"]`).classList.add('active');
+}
+
+// ── Copy code button ─────────────────────────────────────────
+function copyCode(btn) {
+  const tabs = btn.closest('.code-tabs');
+  const activePre = tabs.querySelector('.code-pane.active pre');
+  if (!activePre) return;
+  navigator.clipboard.writeText(activePre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+</script>
+</body>
+</html>
